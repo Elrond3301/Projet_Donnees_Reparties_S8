@@ -16,12 +16,31 @@ public interface Server_itf extends java.rmi.Remote {
 	public int lookup(String name) throws java.rmi.RemoteException;
 
 	/*
+	 * Fonction Lookup
+	 * Parametres : name : nom de l'objet
+	 * Retour : int : identifiant de l'objet
+	 * Cette fonction permet de rechercher un objet dans le serveur
+	 */
+	public int lookupAndSubscribe(String name) throws java.rmi.RemoteException;
+
+
+	/*
 	 * Fonction Register
 	 * Parametres : name : nom de l'objet
 	 *              id : identifiant de l'objet
 	 * Cette fonction permet d'enregistrer un objet dans la map du serveur
 	 */
 	public void register(String name, int id) throws java.rmi.RemoteException;
+
+
+	/*
+	 * Fonction Register
+	 * Parametres : name : nom de l'objet
+	 *              id : identifiant de l'objet
+	 * Cette fonction permet d'enregistrer un objet dans la map du serveur
+	 */
+	public void registerAndSubscribe(String name, int id) throws java.rmi.RemoteException;
+
 
 	/*
 	 * Fonction Create

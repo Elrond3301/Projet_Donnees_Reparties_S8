@@ -21,7 +21,7 @@ public interface Server_itf extends java.rmi.Remote {
 	 * Retour : int : identifiant de l'objet
 	 * Cette fonction permet de rechercher un objet dans le serveur
 	 */
-	public int lookupAndSubscribe(String name) throws java.rmi.RemoteException;
+	public int lookupAndSubscribe(String name, Client_itf client) throws java.rmi.RemoteException;
 
 
 	/*
@@ -39,7 +39,7 @@ public interface Server_itf extends java.rmi.Remote {
 	 *              id : identifiant de l'objet
 	 * Cette fonction permet d'enregistrer un objet dans la map du serveur
 	 */
-	public void registerAndSubscribe(String name, int id) throws java.rmi.RemoteException;
+	public void registerAndSubscribe(String name, int id, Client_itf client) throws java.rmi.RemoteException;
 
 
 	/*
@@ -49,6 +49,10 @@ public interface Server_itf extends java.rmi.Remote {
 	 * Cette fonction permet de créer un ServerObject et de l'enregistrer dans la map du serveur
 	 */
 	public int create(Object o) throws java.rmi.RemoteException;
+
+	/* Je suis un commentaire */
+	public void notification(int id, Object obj) throws java.rmi.RemoteException;
+
 
 	/*
 	 * Fonction Lock Read
@@ -70,5 +74,4 @@ public interface Server_itf extends java.rmi.Remote {
 
 
 
-	// notification(param)
 }

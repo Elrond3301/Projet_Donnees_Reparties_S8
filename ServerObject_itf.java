@@ -10,6 +10,10 @@ import java.rmi.Remote;
 
 public interface ServerObject_itf extends Remote {
 
+    public void subscribe(Client_itf client);
+
+    public void notification(Object obj);
+
     /*
      * Fonction Lock Read
      * Parametres : c : client qui demande le lock

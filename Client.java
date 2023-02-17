@@ -59,9 +59,26 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	}
 
 
-	// lookupAndSubscribe => serveur.lookupAndSubscribe(name, Client.me) + code de lookup
+	/*
+	 * Fonction statique de recherche d'un SharedObject dans le serveur
+	 * Parametres : name : nom du SharedObject
+	 * Retour : SharedObject : SharedObject trouvé, null sinon
+	 */
+	public static SharedObject lookupAndSubscribe(String name) {
+		SharedObject so = null;
+		try {
+			// On récupère l'id du SharedObject
+			int id = server.lookupAndSubscribe(name, Client.me);
+			if (id != -1){ // Si l'id est différent de -1, on a trouvé le SharedObject
+				so = new SharedObject(id); // On crée un SharedObject avec l'id récupéré
+				Client.mapSO.put(id, so); // On ajoute le SharedObject à la map
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return so;
+	}		
 
-	// registerAndSubscribe => pareil
 
 	/*
 	 * Fonction statique de recherche d'un SharedObject dans le serveur
@@ -82,7 +99,22 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		}
 		return so;
 	}		
-	
+
+	/*
+	 * Fonction statique d'enregistrement d'un SharedObject dans le serveur
+	 * Parametres : name : nom du SharedObject
+	 *              so : SharedObject à enregistrer
+	 */
+	public static void registerAndSubscribe(String name, SharedObject_itf so) {
+		try {
+			server.registerAndSubscribe(name, ((SharedObject) so).getId(), Client.me); // On enregistre le SharedObject dans le serveur avec un ID associé à son nom
+		} catch (RemoteException e) {
+			Client.lookup(name); // On regarde si le SharedObject existe déjà
+		}
+	}
+
+
+
 	/*
 	 * Fonction statique d'enregistrement d'un SharedObject dans le serveur
 	 * Parametres : name : nom du SharedObject
@@ -114,6 +146,16 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		return so;
 	}
 	
+	public static void notification(int id, Object obj){
+		try {
+			Client.server.notification(id, obj);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
 /////////////////////////////////////////////////////////////
 //    Interface to be used by the consistency protocol
 ////////////////////////////////////////////////////////////

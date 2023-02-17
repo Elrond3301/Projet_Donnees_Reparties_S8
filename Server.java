@@ -26,12 +26,18 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         this.mapName = new HashMap<String, Integer>();
 	}
 
-    // private subscribe()
-    // serverobject.subscribe(client)
+    public int lookupAndSubscribe(String name, Client_itf client) throws RemoteException{
+        int id = lookup(name);
+        if (id != -1){
+            mapSO.get(mapName.get(name)).subscribe(client);
+        }
+        return id;
+    }
 
-    // public int lookupsubscribe(String name, Client_itf client) => lookup(name) + mapSO.get(mapName.get(name)).subscribe(client)
-
-    // public void registersubscribe(String name, int id, Client_itf client) => register(string,id) + pareil.subscribe(client)
+    public void registerAndSubscribe(String name, int id, Client_itf client) throws RemoteException{
+        register(name,id);
+        mapSO.get(id).subscribe(client);
+    }  
 
 
     @Override 
@@ -61,6 +67,11 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         mapSO.put(id, so);
         return id;
     }
+
+    public void notification(int id, Object obj) throws java.rmi.RemoteException {
+        mapSO.get(id).notification(obj);
+    }
+
 
     @Override // return the object associated to the id after calling the method lock_read
     public Object lock_read(int id, Client_itf client) throws RemoteException {

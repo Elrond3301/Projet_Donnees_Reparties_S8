@@ -24,9 +24,16 @@ public class ServerObject implements ServerObject_itf{
         this.id = id;
         this.verrou = Verrou.NL;
         this.sites = new ArrayList<Client_itf>(); //List -> for (elem : list) if elem.id == id then lock...
+        this.abonnes = new ArrayList<Client_itf>(); 
     }
 
-    // subscribe(client_itf) => add dans abonnes
+    public void subscribe(Client_itf client){
+        this.abonnes.add(client);
+    } 
+
+    public void notification(Object obj){
+        
+    }
 
     @Override
     public synchronized Object lock_read(Client_itf c) {

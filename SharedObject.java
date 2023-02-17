@@ -59,8 +59,9 @@ public class SharedObject implements SharedObject_itf {
 			case RLT :
 				this.lock = Lock.RLC;
 				break;
-			case WLT :
+			case WLT : // ici doit notifier le serveur et rendre l'état de l'objet
 				this.lock = Lock.WLC;
+				// Client.notification(this.id, this.obj)
 				break;
 			case RLT_WLC :
 				this.lock = Lock.WLC;

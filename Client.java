@@ -58,6 +58,11 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		
 	}
 
+
+	// lookupAndSubscribe => serveur.lookupAndSubscribe(name, Client.me) + code de lookup
+
+	// registerAndSubscribe => pareil
+
 	/*
 	 * Fonction statique de recherche d'un SharedObject dans le serveur
 	 * Parametres : name : nom du SharedObject

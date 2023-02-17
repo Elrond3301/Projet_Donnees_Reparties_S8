@@ -15,6 +15,7 @@ public class ServerObject implements ServerObject_itf{
     private String name;
     private Verrou verrou; // true if write, false if read
     private List <Client_itf> sites; //List of clients that have a lock on the object
+    private List <Client_itf> abonnes; //List of clients subscribed to the object
     public Object obj;
 
     public ServerObject(int id, Object obj){
@@ -24,6 +25,8 @@ public class ServerObject implements ServerObject_itf{
         this.verrou = Verrou.NL;
         this.sites = new ArrayList<Client_itf>(); //List -> for (elem : list) if elem.id == id then lock...
     }
+
+    // subscribe(client_itf) => add dans abonnes
 
     @Override
     public synchronized Object lock_read(Client_itf c) {

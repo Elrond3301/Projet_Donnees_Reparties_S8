@@ -26,6 +26,14 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         this.mapName = new HashMap<String, Integer>();
 	}
 
+    // private subscribe()
+    // serverobject.subscribe(client)
+
+    // public int lookupsubscribe(String name, Client_itf client) => lookup(name) + mapSO.get(mapName.get(name)).subscribe(client)
+
+    // public void registersubscribe(String name, int id, Client_itf client) => register(string,id) + pareil.subscribe(client)
+
+
     @Override 
     public int lookup(String name) throws RemoteException {
         Integer res = this.mapName.get(name);

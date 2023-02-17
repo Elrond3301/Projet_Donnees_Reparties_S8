@@ -67,4 +67,8 @@ public interface Server_itf extends java.rmi.Remote {
 	 * Cette fonction permet de demander un lock write sur un objet
 	 */
 	public Object lock_write(int id, Client_itf client) throws java.rmi.RemoteException;
+
+
+
+	// notification(param)
 }

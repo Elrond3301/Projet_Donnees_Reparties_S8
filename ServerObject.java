@@ -5,7 +5,8 @@ import java.rmi.*;
  * Classe ServerObject
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON Germain
+ * Date : 18/02/2023
  * La classe ServerObject contient un objet partagé et un id
  */
 
@@ -27,12 +28,14 @@ public class ServerObject implements ServerObject_itf{
         this.abonnes = new ArrayList<Client_itf>(); 
     }
 
+    @Override
     public void subscribe(Client_itf client){
         this.abonnes.add(client);
     } 
 
+    @Override
     public void notification(Object obj){
-        
+        Client.notification(this.id, obj);
     }
 
     @Override

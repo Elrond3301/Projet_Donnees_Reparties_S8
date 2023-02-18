@@ -5,7 +5,8 @@ import java.io.IOException;
  * Client Lazy
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON Germain
+ * Date : 18/02/2023
  * La classe ClientLazy permet de créer un client qui va écrire et lire dans un fichier en alternance
  * en attendant 5 secondes entre chaque écriture/lecture
 */

@@ -2,7 +2,8 @@
  * Interface Serveur  
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON Germain
+ * Date : 18/02/2023
  * Cette interface définit les fonctions que le client peut appeler sur le serveur
 */
 
@@ -16,10 +17,10 @@ public interface Server_itf extends java.rmi.Remote {
 	public int lookup(String name) throws java.rmi.RemoteException;
 
 	/*
-	 * Fonction Lookup
+	 * Fonction LookupAndSubscribe
 	 * Parametres : name : nom de l'objet
 	 * Retour : int : identifiant de l'objet
-	 * Cette fonction permet de rechercher un objet dans le serveur
+	 * Cette fonction permet de rechercher un objet dans le serveur et de s'abonner à celui-ci
 	 */
 	public int lookupAndSubscribe(String name, Client_itf client) throws java.rmi.RemoteException;
 
@@ -37,7 +38,8 @@ public interface Server_itf extends java.rmi.Remote {
 	 * Fonction Register
 	 * Parametres : name : nom de l'objet
 	 *              id : identifiant de l'objet
-	 * Cette fonction permet d'enregistrer un objet dans la map du serveur
+	 * 			    client : client qui souhaite s'abonner
+	 * Cette fonction permet d'enregistrer un objet dans la map du serveur et de s'abonner à celui-ci
 	 */
 	public void registerAndSubscribe(String name, int id, Client_itf client) throws java.rmi.RemoteException;
 
@@ -50,7 +52,12 @@ public interface Server_itf extends java.rmi.Remote {
 	 */
 	public int create(Object o) throws java.rmi.RemoteException;
 
-	/* Je suis un commentaire */
+	/*
+	 * Fonction Notification
+	 * Parametres : id : identifiant de l'objet
+	 * 			    obj : objet à notifier
+	 * Cette fonction permet de notifier les clients abonnés à un objet
+	 */
 	public void notification(int id, Object obj) throws java.rmi.RemoteException;
 
 

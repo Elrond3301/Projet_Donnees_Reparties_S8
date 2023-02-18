@@ -2,7 +2,8 @@
  * Classe Sentence  
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON Germain
+ * Date : 18/02/2023
  * La classe Sentence contient une donnée de type String
 */
 public class Sentence implements java.io.Serializable {

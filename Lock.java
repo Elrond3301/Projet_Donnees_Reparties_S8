@@ -2,7 +2,8 @@
  * Enumération des différents états possibles d'un verrou  
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON Germain
+ * Date : 18/02/2023
 */
 
 public enum Lock {

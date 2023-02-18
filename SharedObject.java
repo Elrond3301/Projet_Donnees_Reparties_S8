@@ -2,7 +2,8 @@
  * Classe SharedObject   
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON G/ermain
+ * Date : 18/02/2023
  * La classe SharedObject contient un objet partagé et un id
  */
 
@@ -61,7 +62,7 @@ public class SharedObject implements SharedObject_itf {
 				break;
 			case WLT : // ici doit notifier le serveur et rendre l'état de l'objet
 				this.lock = Lock.WLC;
-				Client.notification(this.id, this.obj);
+				Client.notification(this.id, this.obj); // appel de la fonction notification sur le client
 				break;
 			case RLT_WLC :
 				this.lock = Lock.WLC;

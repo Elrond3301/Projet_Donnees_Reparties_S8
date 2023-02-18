@@ -11,7 +11,8 @@ import java.util.*;
  * Classe Server   
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON Germain
+ * Date : 18/02/2023
  * La classe Server permet de gérer les objets partagés
  */
 
@@ -26,20 +27,6 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         this.mapName = new HashMap<String, Integer>();
 	}
 
-    public int lookupAndSubscribe(String name, Client_itf client) throws RemoteException{
-        int id = lookup(name);
-        if (id != -1){
-            mapSO.get(mapName.get(name)).subscribe(client);
-        }
-        return id;
-    }
-
-    public void registerAndSubscribe(String name, int id, Client_itf client) throws RemoteException{
-        register(name,id);
-        mapSO.get(id).subscribe(client);
-    }  
-
-
     @Override 
     public int lookup(String name) throws RemoteException {
         Integer res = this.mapName.get(name);
@@ -50,12 +37,27 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     }
 
     @Override
+    public int lookupAndSubscribe(String name, Client_itf client) throws RemoteException{
+        int id = lookup(name);
+        if (id != -1){
+            mapSO.get(mapName.get(name)).subscribe(client);
+        }
+        return id;
+    }
+
+    @Override
     public synchronized void register(String name, int id) throws RemoteException {
         ServerObject so = mapSO.get(id); 
         so.setName(name);
         mapSO.put(id, so);
         mapName.put(name, id);
     }
+
+    @Override
+    public void registerAndSubscribe(String name, int id, Client_itf client) throws RemoteException{
+        register(name,id);
+        mapSO.get(id).subscribe(client);
+    }  
 
     @Override
     public int create(Object o) throws RemoteException {
@@ -68,6 +70,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         return id;
     }
 
+    @Override
     public void notification(int id, Object obj) throws java.rmi.RemoteException {
         mapSO.get(id).notification(obj);
     }

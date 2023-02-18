@@ -4,13 +4,25 @@ import java.rmi.Remote;
  * Interface ServeurObject  
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ *          BESSON Germain
+ * Date : 18/02/2023
  * Cette interface définit les fonctions que le serveur peut appeler sur l'objet partagé
 */
 
 public interface ServerObject_itf extends Remote {
 
+    /*
+     * Fonction Subscribe
+     * Parametres : client : client qui souhaite s'abonner
+     * Cette fonction permet de s'abonner à un objet partagé
+     */
     public void subscribe(Client_itf client);
+
+    /*
+     * Fonction notification
+     * Parametres : obj : objet à notifier
+     * Cette fonction permet de notifier les clients abonnés à un objet
+     */
 
     public void notification(Object obj);
 

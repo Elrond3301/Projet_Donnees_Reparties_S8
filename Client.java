@@ -205,4 +205,10 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		return Client.mapSO.get(id).invalidate_writer();
 	}
 
+	@Override
+	public void getNotification(int id, Object obj) {
+		Client.mapSO.get(id).getNotifiaction(obj);
+		
+	}
+
 }

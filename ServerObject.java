@@ -35,7 +35,14 @@ public class ServerObject implements ServerObject_itf{
 
     @Override
     public void notification(Object obj){
-        Client.notification(this.id, obj);
+        for(Client_itf clientAbo : this.abonnes){
+            try {
+                clientAbo.getNotification(this.id,this.obj);
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

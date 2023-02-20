@@ -12,6 +12,7 @@ public class SharedObject implements SharedObject_itf {
 	private Lock lock; 
     public Object obj; 
 	private int id;
+	private int notif;
 
 	// Constructor for SharedObject with an object and an id
 	public SharedObject(Object obj, int id) {
@@ -19,6 +20,7 @@ public class SharedObject implements SharedObject_itf {
 		this.obj = obj;
 		this.id = id;
 		this.lock = Lock.NL;
+		this.notif = 0;
 	}
 
 	// Constructor for SharedObject with an id
@@ -40,6 +42,7 @@ public class SharedObject implements SharedObject_itf {
 		} else if(this.lock == Lock.WLC){ // same here
 			this.lock = Lock.RLT_WLC;
 		} 
+		this.notif = 0;
 		
 	}
 
@@ -161,4 +164,17 @@ public class SharedObject implements SharedObject_itf {
 	public Lock getLock(){
 		return this.lock;
 	}
+
+
+	/*
+	 * Fonction getNotification qui permet de recevoir les notifications et mettre à jour le compteur de notification
+	 * 
+	 */
+    public void getNotifiaction(Object obj) {
+		if(this.lock!=Lock.WLC){
+			this.notif ++;
+			System.out.println("Notification reçu : nb notif = "+ this.notif);
+		}
+		
+    }
 }

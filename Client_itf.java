@@ -31,4 +31,13 @@ public interface Client_itf extends java.rmi.Remote {
 	 * Cette fonction est appelee par le serveur pour invalider un client en écriture lors d'un lock write
 	 */
 	public Object invalidate_writer(int id) throws java.rmi.RemoteException;
+
+
+	/*
+	 * Fonction getNotification
+	 * Parametres : obj : obj renvoyé par le serveur
+	 * 			  : id : identifiant de l'objet
+	 * Cette fonction est  appelee par le serveur pour notifier un client abonné à l'objet qu'un message a èté envoyé, mise à jour...
+	 */
+    public void getNotification(int id , Object obj) throws java.rmi.RemoteException;
 }

@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JLabel;
 
@@ -8,7 +10,7 @@ public class Irc_notif extends Frame {
 	public TextArea		text;
 	public static JLabel       notif;
 	public TextField	data;
-	SharedObject		sentence;
+	static SharedObject		sentence;
 	static String		myName;
 
 	public static void main(String argv[]) {
@@ -31,6 +33,19 @@ public class Irc_notif extends Frame {
 		}
 		// create the graphical part
 		new Irc_notif(s);
+
+		// Mettre à jour le nombre de notification toute les 0.5 secondes
+		Timer chrono = new Timer();
+
+		chrono.schedule(new TimerTask(){
+			
+			@Override
+			public void run(){
+				MajNotif(Client.getNbNotif(sentence));
+
+			}
+		},1000,500);
+		
 	}
 
 	public Irc_notif(SharedObject s) {

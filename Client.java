@@ -156,6 +156,17 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		}
 	}
 
+	/*
+	 * Fonction statique qui permet d'obtenir le nombre de notification sur un objet
+	 * Parametres : obj : SharedObject surlequel on souhaite obtenir le nombre de notification
+	 * Retour : Integer : nombre de notification 
+	 */
+	public static int getNbNotif(SharedObject obj){
+		return obj.getNbNotif();
+
+
+	}
+
 
 /////////////////////////////////////////////////////////////
 //    Interface to be used by the consistency protocol

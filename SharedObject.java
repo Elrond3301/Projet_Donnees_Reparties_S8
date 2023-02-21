@@ -43,6 +43,7 @@ public class SharedObject implements SharedObject_itf {
 			this.lock = Lock.RLT_WLC;
 		} 
 		this.notif = 0;
+		Irc_notif.MajNotif(this.notif);
 		
 	}
 
@@ -173,7 +174,8 @@ public class SharedObject implements SharedObject_itf {
     public void getNotifiaction(Object obj) {
 		if(this.lock!=Lock.WLC){
 			this.notif ++;
-			System.out.println("Notification reçu : nb notif = "+ this.notif);
+			Irc_notif.MajNotif(this.notif);
+			
 		}
 		
     }

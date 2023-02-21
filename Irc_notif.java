@@ -1,9 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
 
+import javax.swing.JLabel;
+
 
 public class Irc_notif extends Frame {
 	public TextArea		text;
+	public static JLabel       notif;
 	public TextField	data;
 	SharedObject		sentence;
 	static String		myName;
@@ -38,6 +41,10 @@ public class Irc_notif extends Frame {
 		text.setEditable(false);
 		text.setForeground(Color.red);
 		add(text);
+
+		notif = new JLabel();
+		notif.setText("nbNotif : 0 ");
+		add(notif);
 	
 		data=new TextField(60);
 		add(data);
@@ -54,6 +61,12 @@ public class Irc_notif extends Frame {
 		show();
 		
 		sentence = s;
+	}
+
+	public  static void  MajNotif(int nbNotif){
+
+		notif.setText("nbNotif : "+ nbNotif);
+
 	}
 }
 

@@ -1,5 +1,11 @@
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.TextArea;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 
@@ -21,13 +27,13 @@ public class Irc_notif extends Frame {
 	
 		// initialize the system
 		Client.init();
-		
+		Observateur_Irc_notif obs = new Observateur_Irc_notif();
 		// look up the IRC object in the name server
 		// if not found, create it, and register it in the name server
-		SharedObject s = Client.lookupAndSubscribe("IRC");
+		SharedObject s = Client.lookupAndSubscribe("IRC", obs);
 		if (s == null) {
 			s = Client.create(new Sentence());
-			Client.registerAndSubscribe("IRC", s);
+			Client.registerAndSubscribe("IRC", s, obs);
 		}
 		// create the graphical part
 		new Irc_notif(s);

@@ -35,9 +35,8 @@ public interface Client_itf extends java.rmi.Remote {
 
 	/*
 	 * Fonction getNotification
-	 * Parametres : obj : obj renvoyé par le serveur
-	 * 			  : id : identifiant de l'objet
+	 * Parametres : id : identifiant de l'objet
 	 * Cette fonction est  appelee par le serveur pour notifier un client abonné à l'objet qu'un message a èté envoyé, mise à jour...
 	 */
-    public void getNotification(int id , Object obj) throws java.rmi.RemoteException;
+    public void getNotification(int id) throws java.rmi.RemoteException;
 }

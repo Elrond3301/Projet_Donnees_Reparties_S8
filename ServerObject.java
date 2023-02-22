@@ -37,7 +37,7 @@ public class ServerObject implements ServerObject_itf{
     public void notification(Object obj){
         for(Client_itf clientAbo : this.abonnes){
             try {
-                clientAbo.getNotification(this.id,this.obj);
+                clientAbo.getNotification(this.id);
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

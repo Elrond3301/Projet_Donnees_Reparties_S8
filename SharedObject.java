@@ -13,6 +13,7 @@ public class SharedObject implements SharedObject_itf {
     public Object obj; 
 	private int id;
 	private int notif;
+	private Observateur_itf obs;
 
 	// Constructor for SharedObject with an object and an id
 	public SharedObject(Object obj, int id) {
@@ -31,6 +32,24 @@ public class SharedObject implements SharedObject_itf {
 	}
 	
 
+	// Constructor for SharedObject with an object and an id
+	public SharedObject(Object obj, int id, Observateur_itf obs) {
+		super();
+		this.obj = obj;
+		this.id = id;
+		this.lock = Lock.NL;
+		this.notif = 0;
+		this.obs = obs;
+	}
+
+	// Constructor for SharedObject with an id
+	public SharedObject(int id, Observateur_itf obs){
+		super();
+		this.id = id;
+		this.lock = Lock.NL;
+		this.obs = obs;
+	}
+
 	
 	// invoked by the user program on the client node
 	public void lock_read() {
@@ -43,8 +62,9 @@ public class SharedObject implements SharedObject_itf {
 			this.lock = Lock.RLT_WLC;
 		} 
 		this.notif = 0;
-		Irc_notif.MajNotif(this.notif);
-		
+		if (this.obs != null) {
+			this.obs.getNotification(this.notif);
+		}	
 	}
 
 	// invoked by the user program on the client node
@@ -168,14 +188,24 @@ public class SharedObject implements SharedObject_itf {
 
 
 	/*
+	 * Fonction Get Obs
+	 * Cette fonction permet de récupérer l'observateur d'un objet
+	 * Retourne l'observateur de l'objet
+	 */
+	public Observateur_itf getObs(){
+		return this.obs;
+	}
+
+
+
+	/*
 	 * Fonction getNotification qui permet de recevoir les notifications et mettre à jour le compteur de notification
 	 * 
 	 */
-    public void getNotifiaction(Object obj) {
+    public void getNotification() {
 		if(this.lock!=Lock.WLC){
 			this.notif ++;
-			Irc_notif.MajNotif(this.notif);
-			
+			this.obs.getNotification(this.notif);			
 		}
 		
     }

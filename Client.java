@@ -63,15 +63,16 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	/*
 	 * Fonction statique de recherche d'un SharedObject dans le serveur
 	 * Parametres : name : nom du SharedObject
+	 * 				obs : observateur traitant l'information de mise à jour
 	 * Retour : SharedObject : SharedObject trouvé, null sinon
 	 */
-	public static SharedObject lookupAndSubscribe(String name) {
+	public static SharedObject lookupAndSubscribe(String name, Observateur_itf obs) {
 		SharedObject so = null;
 		try {
 			// On récupère l'id du SharedObject
 			int id = server.lookupAndSubscribe(name, Client.me);
 			if (id != -1){ // Si l'id est différent de -1, on a trouvé le SharedObject
-				so = new SharedObject(id); // On crée un SharedObject avec l'id récupéré
+				so = new SharedObject(id, obs); // On crée un SharedObject avec l'id récupéré
 				Client.mapSO.put(id, so); // On ajoute le SharedObject à la map
 			}
 		} catch (RemoteException e) {
@@ -105,10 +106,14 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	 * Fonction statique d'enregistrement d'un SharedObject dans le serveur
 	 * Parametres : name : nom du SharedObject
 	 *              so : SharedObject à enregistrer
+	 * 				obs : observateur traitant l'information de mise à jour
 	 */
-	public static void registerAndSubscribe(String name, SharedObject_itf so) {
+	public static void registerAndSubscribe(String name, SharedObject_itf so, Observateur_itf obs) {
 		try {
-			server.registerAndSubscribe(name, ((SharedObject) so).getId(), Client.me); // On enregistre le SharedObject dans le serveur avec un ID associé à son nom
+			// On enregistre le SharedObject dans le serveur avec un ID associé à son nom et sans observateur pour que les autres lookup ne soient pas abonnés d'office
+			server.registerAndSubscribe(name, ((SharedObject) so).getId(), Client.me); 
+			// On remplace le SharedObject instancié par le create (où l'on ne savait pas encore s'il serait abonné) par le même avec un observateur
+			mapSO.put(((SharedObject) so).getId(), new SharedObject(((SharedObject) so).obj, ((SharedObject) so).getId(), ((SharedObject) so).getObs()));
 		} catch (RemoteException e) {
 			Client.lookup(name); // On regarde si le SharedObject existe déjà
 		}
@@ -206,8 +211,8 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	}
 
 	@Override
-	public void getNotification(int id, Object obj) {
-		Client.mapSO.get(id).getNotifiaction(obj);
+	public void getNotification(int id) {
+		Client.mapSO.get(id).getNotification();
 		
 	}
 

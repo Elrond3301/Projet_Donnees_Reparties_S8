@@ -8,8 +8,12 @@ public class Observateur_Irc_notif implements Observateur_itf{
      * @param : int compteur : nombre de modifications depuis la dernière lecture
      * @return : int : le compteur si besoin de propager la valeur
      */
+
+
     public int getNotification(int compteur){
 		Irc_notif.MajNotif(compteur);
         return compteur;
     }
+
+    
 }

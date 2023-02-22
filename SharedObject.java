@@ -22,6 +22,7 @@ public class SharedObject implements SharedObject_itf {
 		this.id = id;
 		this.lock = Lock.NL;
 		this.notif = 0;
+		
 	}
 
 	// Constructor for SharedObject with an id
@@ -205,7 +206,8 @@ public class SharedObject implements SharedObject_itf {
     public void getNotification() {
 		if(this.lock!=Lock.WLC){
 			this.notif ++;
-			this.obs.getNotification(this.notif);			
+			this.obs.getNotification(this.notif);	
+
 		}
 		
     }

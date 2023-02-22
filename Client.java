@@ -113,10 +113,10 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 			// On enregistre le SharedObject dans le serveur avec un ID associé à son nom et sans observateur pour que les autres lookup ne soient pas abonnés d'office
 			server.registerAndSubscribe(name, ((SharedObject) so).getId(), Client.me); 
 			// On remplace le SharedObject instancié par le create (où l'on ne savait pas encore s'il serait abonné) par le même avec un observateur
-			mapSO.put(((SharedObject) so).getId(), new SharedObject(((SharedObject) so).obj, ((SharedObject) so).getId(), ((SharedObject) so).getObs()));
+			mapSO.put(((SharedObject) so).getId(), new SharedObject(((SharedObject) so).obj, ((SharedObject) so).getId(), obs));
 		} catch (RemoteException e) {
 			Client.lookup(name); // On regarde si le SharedObject existe déjà
-		}
+	}
 	}
 
 

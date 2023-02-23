@@ -211,4 +211,13 @@ public class SharedObject implements SharedObject_itf {
 		}
 		
     }
+
+	/*
+	 * Fonction Set Obs
+	 * Cette fonction permet de modifier l'observateur d'un objet
+	 */
+
+	public void setObs(Observateur_itf obs) {
+		this.obs = obs;
+	}
 }

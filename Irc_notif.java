@@ -6,6 +6,7 @@ import java.awt.TextArea;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.JLabel;
 
@@ -61,6 +62,14 @@ public class Irc_notif extends Frame {
 		Button read_button = new Button("read");
 		read_button.addActionListener(new readListener_notif(this));
 		add(read_button);
+
+		Button subscribeButton = new Button("subscribe");
+		subscribeButton.addActionListener(new subscribeListener(this));
+		add(subscribeButton);
+
+		Button unsubscribeButton = new Button("unsubscribe");
+		unsubscribeButton.addActionListener(new unsubscribeListener(this));
+		add(unsubscribeButton);
 		
 		setSize(470,300);
 		text.setBackground(Color.black); 
@@ -118,6 +127,36 @@ class writeListener_notif implements ActionListener {
 		
 		// unlock the object
 		irc.sentence.unlock();
+	}
+}
+
+class subscribeListener implements ActionListener {
+	Irc_notif irc;
+	public subscribeListener (Irc_notif i) {
+        	irc = i;
+	}
+	public void actionPerformed (ActionEvent e) {
+		
+		try {
+			Client.subscribe(irc.sentence.getId(), new Observateur_Irc_notif());
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
+	}
+}
+
+class unsubscribeListener implements ActionListener {
+	Irc_notif irc;
+	public unsubscribeListener (Irc_notif i) {
+        	irc = i;
+	}
+	public void actionPerformed (ActionEvent e) {
+		
+		try {
+			Client.unsubscribe(irc.sentence.getId());
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
 	}
 }
 

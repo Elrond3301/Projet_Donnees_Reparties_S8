@@ -114,4 +114,14 @@ public class Server extends UnicastRemoteObject implements Server_itf {
             e.printStackTrace();
         }	
     }
+
+    @Override
+    public void subscribe(int id, Client_itf client) throws RemoteException {
+        mapSO.get(id).subscribe(client);
+    }
+
+    @Override
+    public void unsubscribe(int id, Client_itf client) throws RemoteException {
+        mapSO.get(id).unsubscribe(client);
+    }
 }

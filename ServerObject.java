@@ -34,6 +34,11 @@ public class ServerObject implements ServerObject_itf{
     } 
 
     @Override
+    public void unsubscribe(Client_itf client){
+        this.abonnes.remove(client);
+    } 
+
+    @Override
     public void notification(Object obj){
         for(Client_itf clientAbo : this.abonnes){
             try {

@@ -152,6 +152,11 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		return so;
 	}
 	
+	/*
+	 * Fonction statique de notification d'un SharedObject
+	 * Parametres : id : id du SharedObject
+	 * 				obj : objet à partager
+	 */
 	public static void notification(int id, Object obj){
 		try {
 			Client.server.notification(id, obj);
@@ -159,6 +164,26 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/*
+	 * Fonction statique d'abonnement à un SharedObject
+	 * Parametres : id : id du SharedObject
+	 * 				obs : observateur traitant l'information de mise à jour
+	 */
+	public static void subscribe(int id, Observateur_itf obs) throws java.rmi.RemoteException {
+		Client.mapSO.get(id).setObs(obs);
+		Client.server.subscribe(id, Client.me);
+	}
+	
+	/*
+	 * Fonction statique de désabonnement à un SharedObject
+	 * Parametres : id : id du SharedObject
+	 * 				obs : observateur traitant l'information de mise à jour
+	 */
+	public static void unsubscribe(int id) throws RemoteException {
+		Client.mapSO.get(id).setObs(null);
+		Client.server.unsubscribe(id, Client.me);
 	}
 
 
@@ -215,5 +240,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		Client.mapSO.get(id).getNotification();
 		
 	}
+
+	
 
 }

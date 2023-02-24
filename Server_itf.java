@@ -79,6 +79,21 @@ public interface Server_itf extends java.rmi.Remote {
 	 */
 	public Object lock_write(int id, Client_itf client) throws java.rmi.RemoteException;
 
+	/*
+	 * Fonction Subscribe
+	 * Parametres : id : identifiant de l'objet
+	 * 			client : client qui souhaite s'abonner
+	 * Cette fonction permet de s'abonner à un objet partagé
+	 */
+	public void subscribe(int id, Client_itf client) throws java.rmi.RemoteException;
 
+
+	/*
+	 * Fonction Unsubscribe
+	 * Parametres : id : identifiant de l'objet
+	 * 			client : client qui souhaite s'abonner
+	 * Cette fonction permet de se désabonner à un objet partagé
+	 */
+	public void unsubscribe(int id, Client_itf client) throws java.rmi.RemoteException;
 
 }

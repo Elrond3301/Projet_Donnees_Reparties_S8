@@ -236,8 +236,8 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	}
 
 	@Override
-	public void getNotification(int id) {
-		Client.mapSO.get(id).getNotification();
+	public void getNotification(int id, Object obj) {
+		Client.mapSO.get(id).getNotification(obj);
 		
 	}
 

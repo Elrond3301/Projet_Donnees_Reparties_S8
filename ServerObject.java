@@ -40,14 +40,22 @@ public class ServerObject implements ServerObject_itf{
 
     @Override
     public void notification(Object obj){
+        this.obj = obj;
         for(Client_itf clientAbo : this.abonnes){
             try {
-                clientAbo.getNotification(this.id);
+                
+                //A FAIRE mettre dans un Slave
+                if(!this.sites.contains(clientAbo)){
+                    this.sites.add(clientAbo);
+                    clientAbo.getNotification(this.id, this.obj);
+                    }
+                
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
+        this.verrou = Verrou.RL;
     }
 
     @Override

@@ -86,7 +86,7 @@ public class SharedObject implements SharedObject_itf {
 				this.lock = Lock.RLC;
 				break;
 			case WLT : // ici doit notifier le serveur et rendre l'état de l'objet
-				this.lock = Lock.WLC;
+				this.lock = Lock.RLC;
 				Client.notification(this.id, this.obj); // appel de la fonction notification sur le client
 				break;
 			case RLT_WLC :
@@ -203,12 +203,14 @@ public class SharedObject implements SharedObject_itf {
 	 * Fonction getNotification qui permet de recevoir les notifications et mettre à jour le compteur de notification
 	 * 
 	 */
-    public void getNotification() {
+    public void getNotification(Object obj) {
 		if(this.lock!=Lock.WLC){
+			this.obj =obj;
 			this.notif ++;
 			this.obs.getNotification(this.notif);	
 
 		}
+		this.lock = Lock.RLC;
 		
     }
 

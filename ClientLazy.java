@@ -17,6 +17,7 @@ public class ClientLazy{
 
     private String myName;
     private SharedObject sentence;
+    private boolean abonne = false;
 
 	public ClientLazy(String name) {
         this.myName = name;
@@ -40,6 +41,17 @@ public class ClientLazy{
         try {
             for(int i = 0; i < ClientLazy.NB_ITERATIONS; i++) {
                 FileWriter fw = new FileWriter("test.txt", true);
+                                
+                // Abonnement et désabonnement sporadique
+                if (i%5 == 0){
+                    if (this.abonne){
+                        Client.unsubscribe(this.sentence.getId());
+                    } else {
+                        Client.subscribe(this.sentence.getId(), new Observateur_ClientNormal_Lazy(this.myName));
+                    }
+                }
+
+
                 if (i%2==0){
                     
                     // lock the object in write mode

@@ -4,6 +4,7 @@ nbclientsNormaux=5
 nbclientsLazy=2
 
 echo "" > test.txt
+echo "" > test_abonne.txt
 
 for i in `seq 1 $nbclientsNormaux` # on lance les clients normaux
 do

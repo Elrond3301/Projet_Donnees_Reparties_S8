@@ -16,8 +16,9 @@ public class ClientNormal {
 
     private String myName;
     private SharedObject sentence;
+    private boolean abonne = false; // indique s'il est abonné ou non
 
-	public ClientNormal(String name) {
+    public ClientNormal(String name) {
         this.myName = name;
         // initialize the system
 		Client.init();
@@ -41,6 +42,16 @@ public class ClientNormal {
             for(int i = 0; i < ClientNormal.NB_ITERATIONS; i++) {
                 // On écrit dans le fichier test.txt si il existe
                 FileWriter fw = new FileWriter("test.txt", true);
+                
+                // Abonnement et désabonnement sporadique
+                if (i%5 == 0){
+                    if (this.abonne){
+                        Client.unsubscribe(this.sentence.getId());
+                    } else {
+                        Client.subscribe(this.sentence.getId(), new Observateur_ClientNormal_Lazy(this.myName));
+                    }
+                }
+
                 if (i%2==0){
 
                     // lock the object in write mode

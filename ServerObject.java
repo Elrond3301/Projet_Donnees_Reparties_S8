@@ -39,21 +39,16 @@ public class ServerObject implements ServerObject_itf{
     } 
 
     @Override
-    public void notification(Object obj){
+    public synchronized void notification(Object obj){
         this.obj = obj;
         for(Client_itf clientAbo : this.abonnes){
-            try {
-                
-                //A FAIRE mettre dans un Slave
-                if(!this.sites.contains(clientAbo)){
-                    this.sites.add(clientAbo);
-                    clientAbo.getNotification(this.id, this.obj);
-                    }
-                
-            } catch (RemoteException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            if(!this.sites.contains(clientAbo)){
+                this.sites.add(clientAbo);
+                Slave s = new Slave(clientAbo, id, obj); // Pour éviter le blocage lors de la propagation de l'objet
+                s.start();
             }
+            
+                
         }
         this.verrou = Verrou.RL;
     }
@@ -118,5 +113,24 @@ public class ServerObject implements ServerObject_itf{
     public String getName(){
         return this.name;
     }
-    
+ 
+    private class Slave extends Thread {
+        private Client_itf c;
+        private int id;
+        private Object obj;
+
+        public Slave(Client_itf client, int id, Object obj){
+            this.c = client;
+            this.id = id;
+            this.obj = obj;
+        }
+
+        public void run() { 
+            try {
+                this.c.getNotification(this.id, this.obj);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

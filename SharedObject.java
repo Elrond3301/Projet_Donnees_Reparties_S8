@@ -205,7 +205,7 @@ public class SharedObject implements SharedObject_itf {
 	 * 
 	 */
     public void getNotification(Object obj) {
-		if(this.lock!=Lock.WLC){
+		if(this.lock!=Lock.WLC && this.obs != null){
 			this.obj = obj;
 			this.notif++;
 			this.obs.getNotification(this.notif);	

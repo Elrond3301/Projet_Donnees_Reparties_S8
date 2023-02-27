@@ -29,12 +29,12 @@ public class ServerObject implements ServerObject_itf{
     }
 
     @Override
-    public void subscribe(Client_itf client){
+    public synchronized void subscribe(Client_itf client){
         this.abonnes.add(client);
     } 
 
     @Override
-    public void unsubscribe(Client_itf client){
+    public synchronized void unsubscribe(Client_itf client){
         this.abonnes.remove(client);
     } 
 

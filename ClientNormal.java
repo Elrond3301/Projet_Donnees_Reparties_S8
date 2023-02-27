@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class ClientNormal {
 
-    final static int NB_ITERATIONS = 5;
+    final static int NB_ITERATIONS = 6;
 
     private String myName;
     private SharedObject sentence;
@@ -46,9 +46,15 @@ public class ClientNormal {
                 // Abonnement et désabonnement sporadique
                 if (i%5 == 0){
                     if (this.abonne){
+                        abonne = false;
                         Client.unsubscribe(this.sentence.getId());
+                        fw.write(this.myName + " vient de se désabonner\n");
+                        System.out.println(this.myName + " vient de se désabonner");
                     } else {
+                        abonne = true;
                         Client.subscribe(this.sentence.getId(), new Observateur_ClientNormal_Lazy(this.myName));
+                        fw.write(this.myName + " vient de se s'abonner\n");
+                        System.out.println(this.myName + " vient de se s'abonner");
                     }
                 }
 

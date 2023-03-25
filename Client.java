@@ -4,6 +4,10 @@ import java.net.UnknownHostException;
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.management.RuntimeErrorException;
 
 /* 
  * Classe Client   
@@ -19,7 +23,9 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	private static Server_itf server; // L'objet serveur
 	private static Client_itf me; // L'objet client
 	private static HashMap<Integer, SharedObject> mapSO =  new HashMap<Integer, SharedObject>(); // Map qui associe un SharedObject à son id
-
+	
+	private  static Set<Client_itf> tabC = new HashSet<Client_itf>(); //liste des clients_itf utile dans le addClient
+	
 	public Client() throws RemoteException {
 		super(); // On appelle le constructeur de UnicastRemoteObject
 	}
@@ -44,7 +50,13 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 				// On récupère l'objet serveur
 				server = (Server_itf) Naming.lookup(URL); 
 				// Create a new client
+				if (server.getCmptclient() == Server.NB_CLIENTS){
+					throw new RuntimeErrorException(null);
+				}
 				me = new Client();
+				tabC =  server.addClient(me); // ajout du client
+				while ( server.getCmptclient() != Server.NB_CLIENTS){/* Attente*/}
+				
 			} catch (AccessException e) {
 				e.printStackTrace();
 			} catch (NotBoundException e) {
@@ -58,30 +70,6 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	
 		
 	}
-
-
-	/*
-	 * Fonction statique de recherche d'un SharedObject dans le serveur
-	 * Parametres : name : nom du SharedObject
-	 * 				obs : observateur traitant l'information de mise à jour
-	 * Retour : SharedObject : SharedObject trouvé, null sinon
-	 */
-	public static SharedObject lookupAndSubscribe(String name, Observateur_itf obs) {
-		SharedObject so = null;
-		try {
-			// On récupère l'id du SharedObject
-			int id = server.lookupAndSubscribe(name, Client.me);
-			if (id != -1){ // Si l'id est différent de -1, on a trouvé le SharedObject
-				so = new SharedObject(id, obs); // On crée un SharedObject avec l'id récupéré
-				Client.mapSO.put(id, so); // On ajoute le SharedObject à la map
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return so;
-	}		
-
-
 	/*
 	 * Fonction statique de recherche d'un SharedObject dans le serveur
 	 * Parametres : name : nom du SharedObject
@@ -103,143 +91,36 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	}		
 
 	/*
-	 * Fonction statique d'enregistrement d'un SharedObject dans le serveur
+	 * Fonction statique d'enregistrement et du publication d'un SharedObject dans le serveur
 	 * Parametres : name : nom du SharedObject
-	 *              so : SharedObject à enregistrer
-	 * 				obs : observateur traitant l'information de mise à jour
+	 *              o : SharedObject à enregistrer
+	 * 			    reset : booléen qui indique si on doit réinitialiser le SharedObject
 	 */
-	public static void registerAndSubscribe(String name, SharedObject_itf so, Observateur_itf obs) {
+	public static SharedObject publish(String name, Object o, boolean reset) {
+		SharedObject so = null;
 		try {
-			// On enregistre le SharedObject dans le serveur avec un ID associé à son nom et sans observateur pour que les autres lookup ne soient pas abonnés d'office
-			server.registerAndSubscribe(name, ((SharedObject) so).getId(), Client.me); 
-			// On remplace le SharedObject instancié par le create (où l'on ne savait pas encore s'il serait abonné) par le même avec un observateur
-			mapSO.get(((SharedObject) so).getId()).setObs(obs);;
+			int id = server.publish(name, o, reset); // On enregistre le SharedObject dans le serveur avec un ID associé à son nom
+			
+			so = new SharedObject(o,id); // On crée un SharedObject avec l'id récupéré
+			mapSO.put(id, so);
 		} catch (RemoteException e) {
-			Client.lookup(name); // On regarde si le SharedObject existe déjà
-	}
-	}
-
-
-
-	/*
-	 * Fonction statique d'enregistrement d'un SharedObject dans le serveur
-	 * Parametres : name : nom du SharedObject
-	 *              so : SharedObject à enregistrer
-	 */
-	public static void register(String name, SharedObject_itf so) {
-		try {
-			server.register(name, ((SharedObject) so).getId()); // On enregistre le SharedObject dans le serveur avec un ID associé à son nom
-		} catch (RemoteException e) {
-			Client.lookup(name); // On regarde si le SharedObject existe déjà
+			 // On regarde si le SharedObject existe déjà
+			 
 		}
-	}
-
-	/*
-	 * Fonction statique de création d'un SharedObject dans le serveur
-	 * Parametres : o : objet à partager
-	 * Retour : SharedObject : SharedObject créé
-	 */
-	public static SharedObject create(Object o) {
-		int id = 0;
-		try {
-			id = server.create(o); // On demande au serveur de créer un SharedObject avec l'objet o
-		} catch (RemoteException e) {
-			e.printStackTrace();
-
-		}
-		SharedObject so = new SharedObject(o, id); // On crée un SharedObject avec l'objet o et l'id récupéré
-		Client.mapSO.put(id, so);
 		return so;
 	}
 	
-	/*
-	 * Fonction statique de notification d'un SharedObject
-	 * Parametres : id : id du SharedObject
-	 * 				obj : objet à partager
-	 */
-	public static void notification(int id, Object obj){
-		try {
-			Client.server.notification(id, obj);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void majSO(int id,Object o) throws RemoteException {
+		mapSO.put(id, new SharedObject(o, id));
 	}
 
-	/*
-	 * Fonction statique d'abonnement à un SharedObject
-	 * Parametres : id : id du SharedObject
-	 * 				obs : observateur traitant l'information de mise à jour
-	 */
-	public static void subscribe(int id, Observateur_itf obs) throws java.rmi.RemoteException {
-		Client.mapSO.get(id).setObs(obs);
-		Client.server.subscribe(id, Client.me);
-	}
+
+
 	
-	/*
-	 * Fonction statique de désabonnement à un SharedObject
-	 * Parametres : id : id du SharedObject
-	 * 				obs : observateur traitant l'information de mise à jour
-	 */
-	public static void unsubscribe(int id) throws RemoteException {
-		Client.mapSO.get(id).setObs(null);
-		Client.server.unsubscribe(id, Client.me);
-	}
-
 
 /////////////////////////////////////////////////////////////
 //    Interface to be used by the consistency protocol
 ////////////////////////////////////////////////////////////
-
-	/*
-	 * Fonction statique de demande d'un verrou en lecture au serveur
-	 * Parametres : id : id du SharedObject
-	 * Retour : Object : objet partagé
-	 */
-	public static Object lock_read(int id) {
-		try {
-			return server.lock_read(id, me); // On demande au serveur de nous donner un verrou en lecture
-		} catch (RemoteException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-	}
-
-	/*
-	 * Fonction statique de demande d'un verrou en écriture au serveur
-	 * Parametres : id : id du SharedObject
-	 * Retour : Object : objet partagé
-	 */
-	public static Object lock_write (int id) {
-		try {
-			return server.lock_write(id, me); // On demande au serveur de nous donner un verrou en écriture
-		} catch (RemoteException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	@Override
-	public Object reduce_lock(int id) throws java.rmi.RemoteException {
-		return Client.mapSO.get(id).reduce_lock();
-	}
-
-	@Override
-	public void invalidate_reader(int id) throws java.rmi.RemoteException {
-		Client.mapSO.get(id).invalidate_reader();
-	}
-
-	@Override
-	public Object invalidate_writer(int id) throws java.rmi.RemoteException {
-		return Client.mapSO.get(id).invalidate_writer();
-	}
-
-	@Override
-	public void getNotification(int id, Object obj) {
-		Client.mapSO.get(id).getNotification(obj);
-		
-	}
 
 	
 

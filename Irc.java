@@ -1,10 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
 
-
 public class Irc extends Frame {
 	public TextArea		text;
 	public TextField	data;
+	public Button read_button;
+	public Button write_button;
 	SharedObject		sentence;
 	static String		myName;
 
@@ -16,17 +17,13 @@ public class Irc extends Frame {
 		}
 		myName = argv[0];
 	
-		// initialize the system
+		// initialisation (attendre l'ensemble des sites participants)
 		Client.init();
 		
-		// look up the IRC object in the name server
-		// if not found, create it, and register it in the name server
-		SharedObject s = Client.lookup("IRC");
-		if (s == null) {
-			s = Client.create(new Sentence());
-			Client.register("IRC", s);
-		}
-		// create the graphical part
+		// créer et diffuser un nouvel objet partagé
+		SharedObject s = Client.publish("IRC", new String(""),false);
+		
+		// créer l'IHM
 		new Irc(s);
 	}
 
@@ -42,22 +39,20 @@ public class Irc extends Frame {
 		data=new TextField(60);
 		add(data);
 	
-		Button write_button = new Button("write");
+		write_button = new Button("write");
 		write_button.addActionListener(new writeListener(this));
 		add(write_button);
-		Button read_button = new Button("read");
+		read_button = new Button("read");
 		read_button.addActionListener(new readListener(this));
 		add(read_button);
 		
-		setSize(470,300);
+		setSize(530,270);
 		text.setBackground(Color.black); 
-		show();
+		show();		
 		
 		sentence = s;
 	}
 }
-
-
 
 class readListener implements ActionListener {
 	Irc irc;
@@ -65,41 +60,27 @@ class readListener implements ActionListener {
 		irc = i;
 	}
 	public void actionPerformed (ActionEvent e) {
-		
-		// lock the object in read mode
-		irc.sentence.lock_read();
-		
-		// invoke the method
-		String s = ((Sentence)(irc.sentence.obj)).read();
-		
-		// unlock the object
-		irc.sentence.unlock();
-		
+	
+		irc.read_button.setForeground(Color.lightGray);	// pour le feedback...	
 		// display the read value
-		irc.text.append(s+"\n");
+		irc.text.append(((String)irc.sentence.read())+"\n");
+		irc.read_button.setForeground(Color.black);	
 	}
 }
 
 class writeListener implements ActionListener {
 	Irc irc;
+	String s;
 	public writeListener (Irc i) {
         	irc = i;
 	}
 	public void actionPerformed (ActionEvent e) {
-		
-		// get the value to be written from the buffer
-        String s = irc.data.getText();
-        	
-        // lock the object in write mode
-		irc.sentence.lock_write();
-		
-		// invoke the method
-		((Sentence)(irc.sentence.obj)).write(Irc.myName+" wrote "+s);
+	        	
+        // write the object
+        s="["+Irc.myName+"]:  "+irc.data.getText(); 
+        irc.data.setText(s);// pour le feedback...
+		irc.sentence.write(s);
+		// reset text input field
 		irc.data.setText("");
-		
-		// unlock the object
-		irc.sentence.unlock();
 	}
 }
-
-

@@ -3,7 +3,7 @@
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
  *          BESSON Germain
- * Date : 18/02/2023
+ * Date : 25/03/2023
  * Cette interface définit les fonctions que le client peut appeler sur le serveur
 */
 
@@ -17,83 +17,33 @@ public interface Server_itf extends java.rmi.Remote {
 	public int lookup(String name) throws java.rmi.RemoteException;
 
 	/*
-	 * Fonction LookupAndSubscribe
+	 * Fonction addClient
+	 * Parametres : client : client à ajouter
+	 * Retour : Set<Client_itf> : liste des clients connectés
+	 * Cette fonction permet d'ajouter un client au serveur
+	 */
+	public java.util.Set<Client_itf> addClient(Client_itf client) throws java.rmi.RemoteException;
+
+	/*
+	 * Fonction publish
 	 * Parametres : name : nom de l'objet
+	 * 				o : objet à publier
+	 * 				reset : booléen qui indique si l'objet doit être réinitialisé
 	 * Retour : int : identifiant de l'objet
-	 * Cette fonction permet de rechercher un objet dans le serveur et de s'abonner à celui-ci
+	 * Cette fonction permet de publier un objet sur le serveur
 	 */
-	public int lookupAndSubscribe(String name, Client_itf client) throws java.rmi.RemoteException;
-
-
+	public int publish(String name, Object o, boolean reset) throws java.rmi.RemoteException;
+	
 	/*
-	 * Fonction Register
-	 * Parametres : name : nom de l'objet
-	 *              id : identifiant de l'objet
-	 * Cette fonction permet d'enregistrer un objet dans la map du serveur
+	 * Fonction write
+	 * Parametres : idObjet : identifiant de l'objet
+	 * 				valeur : nouvelle valeur de l'objet
+	 * Retour : int : 0 si l'écriture a réussi, -1 sinon
+	 * Cette fonction permet d'écrire une nouvelle valeur dans un objet
 	 */
-	public void register(String name, int id) throws java.rmi.RemoteException;
+	public int write(int idObjet, Object valeur) throws java.rmi.RemoteException;
 
 
-	/*
-	 * Fonction Register
-	 * Parametres : name : nom de l'objet
-	 *              id : identifiant de l'objet
-	 * 			    client : client qui souhaite s'abonner
-	 * Cette fonction permet d'enregistrer un objet dans la map du serveur et de s'abonner à celui-ci
-	 */
-	public void registerAndSubscribe(String name, int id, Client_itf client) throws java.rmi.RemoteException;
-
-
-	/*
-	 * Fonction Create
-	 * Parametres : o : objet à créer
-	 * Retour : int : identifiant de l'objet
-	 * Cette fonction permet de créer un ServerObject et de l'enregistrer dans la map du serveur
-	 */
-	public int create(Object o) throws java.rmi.RemoteException;
-
-	/*
-	 * Fonction Notification
-	 * Parametres : id : identifiant de l'objet
-	 * 			    obj : objet à notifier
-	 * Cette fonction permet de notifier les clients abonnés à un objet
-	 */
-	public void notification(int id, Object obj) throws java.rmi.RemoteException;
-
-
-	/*
-	 * Fonction Lock Read
-	 * Parametres : id : identifiant de l'objet
-	 *              client : client qui demande le lock
-	 * Retour : Object : objet à renvoyer au client pour l'actualiser
-	 * Cette fonction permet de demander un lock read sur un objet
-	 */
-	public Object lock_read(int id, Client_itf client) throws java.rmi.RemoteException;
-
-	/*
-	 * Fonction Lock Write
-	 * Parametres : id : identifiant de l'objet
-	 *              client : client qui demande le lock
-	 * Retour : Object : objet à renvoyer au client pour l'actualiser
-	 * Cette fonction permet de demander un lock write sur un objet
-	 */
-	public Object lock_write(int id, Client_itf client) throws java.rmi.RemoteException;
-
-	/*
-	 * Fonction Subscribe
-	 * Parametres : id : identifiant de l'objet
-	 * 			client : client qui souhaite s'abonner
-	 * Cette fonction permet de s'abonner à un objet partagé
-	 */
-	public void subscribe(int id, Client_itf client) throws java.rmi.RemoteException;
-
-
-	/*
-	 * Fonction Unsubscribe
-	 * Parametres : id : identifiant de l'objet
-	 * 			client : client qui souhaite s'abonner
-	 * Cette fonction permet de se désabonner à un objet partagé
-	 */
-	public void unsubscribe(int id, Client_itf client) throws java.rmi.RemoteException;
+	public int getCmptclient() throws java.rmi.RemoteException;
 
 }

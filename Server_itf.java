@@ -44,6 +44,12 @@ public interface Server_itf extends java.rmi.Remote {
 	public int write(int idObjet, Object valeur) throws java.rmi.RemoteException;
 
 
+	/*
+	 * Fonction getCmptclient
+	 * Parametres :
+	 * Retour : int : nombre de clients connectés
+	 * Cette fonction permet de récupérer le nombre de clients connectés
+	 */
 	public int getCmptclient() throws java.rmi.RemoteException;
 
 }

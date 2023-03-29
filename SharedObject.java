@@ -11,6 +11,7 @@ public class SharedObject implements SharedObject_itf {
 
     public Object obj; 
 	private int id;
+	private int version;
 
 	// Constructor for SharedObject with an object and an id
 	public SharedObject(Object obj, int id) {
@@ -35,15 +36,42 @@ public class SharedObject implements SharedObject_itf {
 		return this.id;
 	}
 
+	/*
+	 * Fonction Get Version
+	 * Cette fonction permet de récupérer la version d'un objet
+	 * Retourne le numero de version  de l'objet
+	 */
+	public int getVersion(){
+		return this.version;
+		
+	}
+
+	/*
+	 * Fonction read
+	 * Cette fonction permet de lire l'objet
+	 * Retourne l'objet
+	 */
 	public Object read(){
 		System.out.println("je lis");
 		// maj obj
-		return this.obj;
+		SharedObject s = Client.enquete(this.id, new Rappel_lec());
+		if (s.obj != null){
+			this.version = s.getVersion();
+			return s.obj;
+		} else {
+			return this.obj;
+		} 
 	}
 
+	/*
+	 * Fonction write
+	 * Parametres : o : objet à écrire
+	 * Cette fonction permet d'écrire dans l'objet
+	 */
 	public void write(Object o){
 		System.out.println("j'ecris");
 		this.obj = o;
-		// propagation maj obj
+		//maj des clients
+
 	}
 }

@@ -110,11 +110,28 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		return so;
 	}
 	
+	/*
+	 * Fonction de mise à jour d'un SharedObject dans la map
+	 * Parametres : id : id du SharedObject
+	 * 			o : SharedObject à mettre à jour
+	 */
+	 
 	public void majSO(int id,Object o) throws RemoteException {
 		mapSO.put(id, new SharedObject(o, id));
 	}
 
+	/*
+	 * Fonction de récupération d'un SharedObject dans la map
+	 * Parametres : id : id du SharedObject
+	 * Retour : SharedObject : SharedObject trouvé, null sinon
+	 */
+	public SharedObject getSharedObject(int id) throws RemoteException {
+		return mapSO.get(id);
+	}
 
+	
+
+	
 
 	
 
@@ -122,6 +139,32 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 //    Interface to be used by the consistency protocol
 ////////////////////////////////////////////////////////////
 
+	public static SharedObject enquete(int id, Rappel_lec rappel){
+
+		for (Client_itf c : Client.tabC){
+			Client_enquete_Slave s = new Client_enquete_Slave(c, id, rappel);
+			s.start();
+		}
+		while (rappel.length() < Server.NB_CLIENTS/2){}
+
+		SharedObject obj_cour = null;
+		int length = rappel.length();
+		int ver_min = 0;
+		for (int i = 0; i < length; i++){
+			int ver_test = ((SharedObject) rappel.get(i)).getVersion();
+			if ( ver_test > ver_min){
+				ver_min = ver_test;
+				obj_cour = (SharedObject) rappel.get(i);
+			}
+		}
+		if (obj_cour != null){
+			Client.mapSO.put(id, obj_cour);
+		}
+		return obj_cour;
+	}
+
 	
 
+
 }
+

@@ -23,8 +23,10 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	private static Server_itf server; // L'objet serveur
 	private static Client_itf me; // L'objet client
 	private static HashMap<Integer, SharedObject> mapSO =  new HashMap<Integer, SharedObject>(); // Map qui associe un SharedObject à son id
-	
-	private  static Set<Client_itf> tabC = new HashSet<Client_itf>(); //liste des clients_itf utile dans le addClient
+	private static Set<Client_itf> tabC = new HashSet<Client_itf>(); //liste des clients_itf utile dans le addClient
+
+	private static Rappel_lec rappel;
+
 	
 	public Client() throws RemoteException {
 		super(); // On appelle le constructeur de UnicastRemoteObject
@@ -121,17 +123,28 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	}
 
 	/*
-	 * Fonction de récupération d'un SharedObject dans la map
+	 * Fonction de récupération d'un Object dans la map
 	 * Parametres : id : id du SharedObject
-	 * Retour : SharedObject : SharedObject trouvé, null sinon
+	 * Retour : Object : Object trouvé, null sinon
 	 */
-	public SharedObject getSharedObject(int id) throws RemoteException {
-		return mapSO.get(id);
+	public Object getObject(int id) throws RemoteException {
+		return mapSO.get(id).obj;
+	}
+
+	public int getVersion(int id) throws RemoteException {
+		return mapSO.get(id).getVersion();
 	}
 
 	
 
-	
+	public synchronized void add_reponse(Object o, int version){
+		Client.rappel.reponse(o, version);
+		System.out.println("Client add réponse" + Client.rappel.length());
+		if (Client.rappel.length() >= Server.NB_CLIENTS/2){
+			System.out.println("je me réveille");
+			Client.me.notify();
+		}
+	}
 
 	
 
@@ -139,31 +152,68 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 //    Interface to be used by the consistency protocol
 ////////////////////////////////////////////////////////////
 
-	public static SharedObject enquete(int id, Rappel_lec rappel){
+	public static SharedObject read(int id, Rappel_lec rappel){
+		try {
+			return Client.me.enquete(id, rappel);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
+	public synchronized SharedObject enquete(int id, Rappel_lec rappel){
+		Client.rappel = new Rappel_lec();
+		System.out.println("debut enquete");
 		for (Client_itf c : Client.tabC){
-			Client_enquete_Slave s = new Client_enquete_Slave(c, id, rappel);
+			System.out.println("lancement client ");
+			Client_enquete_Slave s = new Client_enquete_Slave(c, id, me);
 			s.start();
 		}
-		while (rappel.length() < Server.NB_CLIENTS/2){}
+		try {
+			System.out.println("attente");
+			Client.this.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("réveil");		
+//		while (Client.rappel.length() < Server.NB_CLIENTS/2){}
 
 		SharedObject obj_cour = null;
-		int length = rappel.length();
+		int length = Client.rappel.length();
 		int ver_min = 0;
+		System.out.println("test taille : " + Client.rappel.length());
 		for (int i = 0; i < length; i++){
-			int ver_test = ((SharedObject) rappel.get(i)).getVersion();
-			if ( ver_test > ver_min){
+			System.out.println("test :" + i);
+			SharedObject s = new SharedObject(Client.rappel.getObj(i), id);
+			s.setVersion(Client.rappel.getVersion(i));
+			System.out.println("comparaison : " + ver_min + ", " + s.getVersion() + " ->" + s.obj);
+			int ver_test = s.getVersion();
+			if ( ver_test >= ver_min){
 				ver_min = ver_test;
-				obj_cour = (SharedObject) rappel.get(i);
+				obj_cour = s;
 			}
 		}
+		System.out.println("bonsoir : " + obj_cour);
 		if (obj_cour != null){
 			Client.mapSO.put(id, obj_cour);
 		}
 		return obj_cour;
 	}
 
-	
+	public static int mise_à_jour(Object obj, int idObjet){
+		int version = 0;
+		try {
+			version = server.write(idObjet);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Nouvelle version : " + version);
+		SharedObject so = new SharedObject(obj, idObjet);
+		so.setVersion(version);
+		Client.mapSO.put(idObjet, so);
+		return version;
+	}
 
 
 }

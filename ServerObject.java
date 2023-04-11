@@ -16,14 +16,16 @@ public class ServerObject implements ServerObject_itf{
     private String name;
     private List <Client_itf> sites; //List of clients that have a lock on the object
     public Object obj;
+    private int version;
 
 
 
-    public ServerObject(int id, Object obj){
+    public ServerObject(int id, Object obj,int version){
         super();
         this.obj =  obj;
         this.id = id;
         this.sites = new ArrayList<Client_itf>(); //List -> for (elem : list) if elem.id == id then lock...
+        this.version = version;
     }
 
 
@@ -44,6 +46,29 @@ public class ServerObject implements ServerObject_itf{
      */
     public String getName(){
         return this.name;
+    }
+
+    /*
+     * Fonction getVersion
+     * Permet de récupérer la version d'un objet
+     * Retour : int : version de l'objet
+     */
+     
+    public int getVersion(){
+        return this.version;
+    }
+
+    /*
+     * Fonction setVersion
+     * Permet de modifier la version d'un objet
+     * Parametres : version : nouvelle version de l'objet
+     */
+    public void setVersion(int version){
+        this.version = version;
+    }
+
+    public int newVersion(){
+        return this.version++;
     }
  
 }

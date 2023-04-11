@@ -19,6 +19,13 @@ public interface Client_itf extends java.rmi.Remote {
 
 	//public void mise_à_jour(idObjet : entier, version : entier, valeur : Object, cbr : Rappel_ecr);
 
-	public SharedObject getSharedObject(int id) throws RemoteException;
+	public Object getObject(int id) throws RemoteException;
+
+	public int getVersion(int id) throws RemoteException;
+
+	public void add_reponse(Object o, int version) throws RemoteException ;
+	
+	public SharedObject enquete(int id, Rappel_lec rappel) throws RemoteException;
+
 
 }

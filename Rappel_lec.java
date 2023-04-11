@@ -3,18 +3,21 @@ import java.util.*;
 
 public class Rappel_lec implements Remote {
 
-    private ArrayList<SharedObject_itf> lec_rep;
+    private ArrayList<Object> lec_rep;
+    private ArrayList<Integer> lec_rep_version;
 
     public Rappel_lec() {
-        this.lec_rep = new ArrayList<SharedObject_itf>();
+        this.lec_rep = new ArrayList<Object>();
+        this.lec_rep_version = new ArrayList<Integer>();
     }
 
     /*
      * Fonction reponse
      * Permet de stocker les réponses des clients
      */
-    public void reponse(SharedObject val){
+    public void reponse(Object val, int version){
         this.lec_rep.add(val);
+        this.lec_rep_version.add(version);
     }   
 
     /*
@@ -26,7 +29,12 @@ public class Rappel_lec implements Remote {
     }
 
 
-    public SharedObject_itf get(int i){
+    public Object getObj(int i){
         return this.lec_rep.get(i);
     }
+
+    public int getVersion(int i){
+        return this.lec_rep_version.get(i);
+    }
+
 }

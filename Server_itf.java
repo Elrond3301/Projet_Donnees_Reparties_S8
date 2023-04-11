@@ -41,7 +41,7 @@ public interface Server_itf extends java.rmi.Remote {
 	 * Retour : int : 0 si l'écriture a réussi, -1 sinon
 	 * Cette fonction permet d'écrire une nouvelle valeur dans un objet
 	 */
-	public int write(int idObjet, Object valeur) throws java.rmi.RemoteException;
+	public int write(int idObjet) throws java.rmi.RemoteException;
 
 
 	/*

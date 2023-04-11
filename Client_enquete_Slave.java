@@ -3,19 +3,21 @@ import java.rmi.RemoteException;
 public class Client_enquete_Slave extends Thread {
 
 			private Client_itf c;
+			private Client_itf origin;
 			private int id;
-			private Rappel_lec rappel;
 
-			public Client_enquete_Slave(Client_itf c, int id, Rappel_lec rappel){
+			public Client_enquete_Slave(Client_itf c, int id, Client_itf origin){
 				this.c = c;
 				this.id = id;
-				this.rappel = rappel;
+				this.origin = origin;
 			}
 
 
 			public void run(){
 				try {
-					this.rappel.reponse(this.c.getSharedObject(this.id));
+					Object obj = this.c.getObject(id);
+					int version = this.c.getVersion(id);
+					origin.add_reponse(obj, version);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}

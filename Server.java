@@ -59,7 +59,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         if (mapName.containsKey(name)){
             if (reset){
                 id = mapName.get(name);
-                ServerObject so = new ServerObject(id, o);
+                ServerObject so = new ServerObject(id, o,0);
                 mapSO.put(id, so);
                 // Propagation
                 for (Client_itf client : this.tabC){
@@ -70,7 +70,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
             }
         } else {
             id = mapSO.size();
-            ServerObject so = new ServerObject(id,o);
+            ServerObject so = new ServerObject(id,o,0);
             mapSO.put(id,so);
             mapName.put(name, id);
             // Propagation
@@ -82,8 +82,11 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     }
 
     @Override
-    public int write(int idObjet, Object valeur) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'write'");
+    public int write(int idObjet) throws RemoteException {
+        ServerObject so =  this.mapSO.get(idObjet);
+        int res = so.newVersion();
+        this.mapSO.put(idObjet, so);
+        return res;
     }
 
     // return the name of the ServerObject associated to the id

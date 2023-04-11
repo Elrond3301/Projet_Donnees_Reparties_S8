@@ -46,6 +46,10 @@ public class SharedObject implements SharedObject_itf {
 		
 	}
 
+	public void setVersion(int version){
+		this.version = version;
+	}
+
 	/*
 	 * Fonction read
 	 * Cette fonction permet de lire l'objet
@@ -54,7 +58,7 @@ public class SharedObject implements SharedObject_itf {
 	public Object read(){
 		System.out.println("je lis");
 		// maj obj
-		SharedObject s = Client.enquete(this.id, new Rappel_lec());
+		SharedObject s = Client.read(this.id, new Rappel_lec());
 		if (s.obj != null){
 			this.version = s.getVersion();
 			return s.obj;
@@ -71,6 +75,7 @@ public class SharedObject implements SharedObject_itf {
 	public void write(Object o){
 		System.out.println("j'ecris");
 		this.obj = o;
+		this.version = Client.mise_à_jour(this.obj, this.id);
 		//maj des clients
 
 	}

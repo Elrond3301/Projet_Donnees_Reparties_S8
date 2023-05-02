@@ -26,7 +26,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	private static Set<Client_itf> tabC = new HashSet<Client_itf>(); //liste des clients_itf utile dans le addClient
 
 	private static Rappel_lec rappel;
-
+	private static Rappel_ecr rappel_ecr;
 	
 	public Client() throws RemoteException {
 		super(); // On appelle le constructeur de UnicastRemoteObject
@@ -137,8 +137,9 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 
 	
 
-	public synchronized void add_reponse(Object o, int version){
+	public synchronized void add_reponse(Object o, Client_itf c, int version){
 		Client.rappel.reponse(o, version);
+		Client.rappel_ecr.reponse(c);
 		System.out.println("Client add réponse" + Client.rappel.length());
 		if (Client.rappel.length() >= Server.NB_CLIENTS/2){
 			System.out.println("je me réveille");
@@ -164,6 +165,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 
 	public synchronized SharedObject enquete(int id, Rappel_lec rappel){
 		Client.rappel = rappel;
+		Client.rappel_ecr = new Rappel_ecr();
 		System.out.println("debut enquete");
 		for (Client_itf c : Client.tabC){
 			System.out.println("lancement client ");
@@ -197,6 +199,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		System.out.println("bonsoir : " + obj_cour);
 		if (obj_cour != null){
 			Client.mapSO.put(id, obj_cour);
+			Client.rappel_ecr.maj(id, obj_cour.obj,obj_cour.getVersion());
 		}
 		return obj_cour;
 	}

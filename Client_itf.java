@@ -23,7 +23,7 @@ public interface Client_itf extends java.rmi.Remote {
 
 	public int getVersion(int id) throws RemoteException;
 
-	public void add_reponse(Object o, int version) throws RemoteException ;
+	public void add_reponse(Object o, Client_itf c, int version) throws RemoteException ;
 	
 	public SharedObject enquete(int id, Rappel_lec rappel) throws RemoteException;
 

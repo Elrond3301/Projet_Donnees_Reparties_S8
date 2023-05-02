@@ -18,7 +18,7 @@ import java.util.*;
 
 public class Server extends UnicastRemoteObject implements Server_itf {
 
-    public static final int NB_CLIENTS = 3;
+    public static int NB_CLIENTS = 3;
     private Set<Client_itf> tabC = new HashSet<Client_itf>(); 
     private int cmptclient = 0;
 
@@ -100,6 +100,15 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 
     public static void main(String [] args){
         System.out.println("Hello world !");
+
+        if (args != null && args.length == 1){
+            Server.NB_CLIENTS = Integer.parseInt(args[0]);
+            System.out.println("Nombre de clients : " + Server.NB_CLIENTS);
+        } else if (args != null && args.length > 1){
+            System.out.println("Usage : java Server [nb_clients]");
+            System.exit(1);
+        }
+
         // initialize the system
 		Server s = null;
         try {

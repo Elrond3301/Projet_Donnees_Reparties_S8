@@ -17,7 +17,7 @@ public class Client_enquete_Slave extends Thread {
 				try {
 					Object obj = this.c.getObject(id);
 					int version = this.c.getVersion(id);
-					origin.add_reponse(obj, version);
+					origin.add_reponse(obj, this.c, version);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}

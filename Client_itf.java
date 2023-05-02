@@ -27,5 +27,6 @@ public interface Client_itf extends java.rmi.Remote {
 	
 	public SharedObject enquete(int id, Rappel_lec rappel) throws RemoteException;
 
+	public void maj_asynchrone(Object o, int id, int version) throws RemoteException;
 
 }

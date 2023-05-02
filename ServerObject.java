@@ -68,7 +68,7 @@ public class ServerObject implements ServerObject_itf{
     }
 
     public int newVersion(){
-        return this.version++;
+        return ++this.version;
     }
  
 }

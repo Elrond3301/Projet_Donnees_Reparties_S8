@@ -57,7 +57,6 @@ public class SharedObject implements SharedObject_itf {
 	 */
 	public Object read(){
 		System.out.println("je lis");
-		// maj obj
 		SharedObject s = Client.read(this.id, new Rappel_lec());
 		if (s.obj != null){
 			this.version = s.getVersion();
@@ -76,7 +75,5 @@ public class SharedObject implements SharedObject_itf {
 		System.out.println("j'ecris");
 		this.obj = o;
 		this.version = Client.mise_à_jour(this.obj, this.id);
-		//maj des clients
-
 	}
 }

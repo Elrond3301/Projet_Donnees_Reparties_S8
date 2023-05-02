@@ -163,7 +163,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	}
 
 	public synchronized SharedObject enquete(int id, Rappel_lec rappel){
-		Client.rappel = new Rappel_lec();
+		Client.rappel = rappel;
 		System.out.println("debut enquete");
 		for (Client_itf c : Client.tabC){
 			System.out.println("lancement client ");
@@ -212,9 +212,22 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		SharedObject so = new SharedObject(obj, idObjet);
 		so.setVersion(version);
 		Client.mapSO.put(idObjet, so);
+		// Faire un slave qui met à jour dans les clients le shared object en asynchrone si version >
+		// Client_Maj_Slave(tabC, SharedObject, id) -> Client.maj_asynchrone(SharedObject, id) -> check la version met à jour si supérieur
+		for(Client_itf c : Client.tabC){
+			Client_maj_Slave s = new Client_maj_Slave(c, so.obj, idObjet, so.getVersion());
+			s.start();	
+		}
 		return version;
 	}
-
+	
+	public void maj_asynchrone(Object o, int id, int version) throws RemoteException {
+		if (Client.mapSO.get(id).getVersion() < version){
+			SharedObject so = new SharedObject(o, id);
+			so.setVersion(version);
+			Client.mapSO.put(id, so);
+		}
+	}
 
 }
 

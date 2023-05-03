@@ -6,7 +6,7 @@ import java.rmi.*;
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
  *          BESSON Germain
- * Date : 18/02/2023
+ * Date : 03/05/2023
  * La classe ServerObject contient un objet partagé et un id
  */
 
@@ -67,6 +67,11 @@ public class ServerObject implements ServerObject_itf{
         this.version = version;
     }
 
+    /*
+     * Fonction newVersion
+     * Retour : la version de l'objet avant actualisation
+     * Actualise la version de l'objet après avoir retourné la version qu'il avait
+     */
     public int newVersion(){
         return ++this.version;
     }

@@ -3,9 +3,10 @@ import java.io.IOException;
 
 /* 
  * Client Normal
- * Auteur : CAMPAN Mathieu
+ * Auteur : BESSON Germain
+ *          CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ * Date : 03/05/2023
  * La classe ClientNormal permet de créer un client qui va écrire et lire dans un fichier en alternance
 */
 public class ClientNormal {

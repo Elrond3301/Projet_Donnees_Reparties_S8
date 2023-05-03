@@ -2,6 +2,15 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.*;
 
+/* 
+ * Classe Rappel_ecr   
+ * Auteur : CAMPAN Mathieu
+ *          HAUTESSERRES Simon
+ *          BESSON Germain
+ * Date : 03/05/2023
+ * La classe rappel_ecriture permet de mettre à jour en écriture chaque client
+*/
+
 public class Rappel_ecr implements Remote {    
     
     private ArrayList<Client_itf> tabc;
@@ -27,6 +36,13 @@ public class Rappel_ecr implements Remote {
         return this.tabc.size();
     }
 
+    /*
+     * Fonction maj
+     * Parametres : id : identifiant de l'objet
+     *              o : objet 
+     *              version : de l'objet
+     * Actualise l'objet atomiquement en écriture pour chaque client si nécessaire selon la version qu'ils ont
+     */
     public void maj(int id, Object o, int version){
         for (Client_itf c : this.tabc){
             try {
@@ -39,11 +55,6 @@ public class Rappel_ecr implements Remote {
                 e.printStackTrace();
             }
         }
-    }
-
-    /* A enlever si inutile */
-    public Object getClient(int i){
-        return this.tabc.get(i);
     }
 
 }

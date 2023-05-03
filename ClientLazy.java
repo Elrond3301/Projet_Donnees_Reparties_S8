@@ -3,9 +3,10 @@ import java.io.IOException;
 
 /* 
  * Client Lazy
- * Auteur : CAMPAN Mathieu
+ * Auteur : BESSON Germain
+ *          CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 21/01/2023
+ * Date : 03/05/2023
  * La classe ClientLazy permet de créer un client qui va écrire et lire dans un fichier en alternance
  * en attendant 5 secondes entre chaque écriture/lecture
 */
@@ -21,9 +22,6 @@ public class ClientLazy{
         this.myName = name;
         // initialize the system
 		Client.init();
-		
-		// look up the IRC object in the name server
-		// if not found, create it, and register it in the name server
 		
 		// créer et diffuser un nouvel objet partagé
         this.sentence = Client.publish("IRC", new String(""),false);

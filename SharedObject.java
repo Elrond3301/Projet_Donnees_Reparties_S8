@@ -3,7 +3,7 @@
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
  *          BESSON G/ermain
- * Date : 18/02/2023
+ * Date : 03/05/2023
  * La classe SharedObject contient un objet partagé et un id
  */
 
@@ -46,6 +46,11 @@ public class SharedObject implements SharedObject_itf {
 		
 	}
 
+	/*
+	 * Fonction setVersion
+	 * Parametres : version de l'objet
+	 * Modifie la version de l'objet
+	 */
 	public void setVersion(int version){
 		this.version = version;
 	}

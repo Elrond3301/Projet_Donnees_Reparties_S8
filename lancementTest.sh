@@ -8,7 +8,6 @@ echo "" > test.txt
 
 for i in `seq 1 $nbclientsNormaux` # on lance les clients normaux
 do
-    echo $i
     java ClientNormal ClientNormal$i &
 done
 

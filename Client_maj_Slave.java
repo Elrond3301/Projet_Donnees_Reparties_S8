@@ -1,5 +1,13 @@
 import java.rmi.RemoteException;
 
+/* 
+* Classe Client Maj Slave 
+* Auteur : CAMPAN Mathieu
+*          HAUTESSERRES Simon
+*          BESSON Germain
+* Date : 03/05/2023
+* Cette classe permet d'effectuer une mise à jour asynchrone pour un client cible
+*/
 public class Client_maj_Slave extends Thread {
 
 	private Client_itf c;
@@ -17,7 +25,7 @@ public class Client_maj_Slave extends Thread {
 
 	public void run(){
 		try {
-			c.maj_asynchrone(this.o, this.id, this.version);
+			c.majAsynchrone(this.o, this.id, this.version);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

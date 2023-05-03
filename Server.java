@@ -101,7 +101,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     public static void main(String [] args){
         System.out.println("Hello world !");
 
-        if (args != null && args.length == 1){
+        if (args != null && args.length == 1){              /* On peut changer le nombre de clients en paramètres */
             Server.NB_CLIENTS = Integer.parseInt(args[0]);
             System.out.println("Nombre de clients : " + Server.NB_CLIENTS);
         } else if (args != null && args.length > 1){

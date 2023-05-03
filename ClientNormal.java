@@ -33,20 +33,27 @@ public class ClientNormal {
 	public void run() {
         try {
             for(int i = 0; i < ClientNormal.NB_ITERATIONS; i++) {
-                FileWriter fw = new FileWriter("test.txt", true);
+                
                 if (i%2==0){
 
                     System.out.println("Client " + this.myName + " veut écrire");
+                    FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" avant écriture iteration " + i + " " +((SharedObject) this.sentence).getVersion() + "\n");
+                    fw.close();
                     this.sentence.write("ecriture : " + i);
+                    fw = new FileWriter("test.txt", true);
                     fw.write(myName+" après écriture " + ((SharedObject) this.sentence).getVersion()+"\n");
+                    fw.close();
             
                 } else {
                     System.out.println("Client " + this.myName + " veut lire");
+                    FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" avant read iteration " + i + " " + ((SharedObject) this.sentence).getVersion()+"\n");
+                    fw.close();
+                    fw = new FileWriter("test.txt", true);
                     fw.write(myName+" après read " + ((SharedObject) this.sentence).getVersion()+"\n");
+                    fw.close();
                 }
-                fw.close();
             }
         } catch (IOException e) {
                 e.printStackTrace();

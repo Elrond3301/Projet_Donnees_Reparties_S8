@@ -140,7 +140,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	public synchronized void add_reponse(Object o, Client_itf c, int version){
 		Client.rappel.reponse(o, version);
 		Client.rappel_ecr.reponse(c);
-		System.out.println("Client add réponse" + Client.rappel.length());
+		System.out.println("Client add réponse" + Client.rappel.length() + " Besoin de " + Server.NB_CLIENTS/2 + " clients");
 		if (Client.rappel.length() >= Server.NB_CLIENTS/2){
 			System.out.println("je me réveille");
 			Client.me.notify();

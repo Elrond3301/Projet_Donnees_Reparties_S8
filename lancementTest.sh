@@ -1,13 +1,14 @@
 #!/bin/sh
 
-nbclientsNormaux=2
-nbclientsLazy=0
+nbclientsNormaux=10
+nbclientsLazy=2
 
 
 echo "" > test.txt
 
 for i in `seq 1 $nbclientsNormaux` # on lance les clients normaux
 do
+    echo $i
     java ClientNormal ClientNormal$i &
 done
 

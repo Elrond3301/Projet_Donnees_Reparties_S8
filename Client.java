@@ -137,7 +137,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	 * Retour : version : la nouvelle version de l'objet mis à jour
 	 * Met à jour un objet avec la version la plus récente et actualise la version
 	 */
-	public static int mise_à_jour(Object obj, int idObjet){
+	public static int mise_a_jour(Object obj, int idObjet){
 		int version = 0;
 		try {
 			version = server.write(idObjet); /* On demande au serveur d'écrire dans l'objet et de nous donner le bon numéro de version */
@@ -151,7 +151,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		for(Client_itf c : Client.tabC){ /* On propage la mise à jour aux autres clients de façon asynchrone */
 			Client_maj_Slave s = new Client_maj_Slave(c, so.obj, idObjet, so.getVersion());
 			s.start();	
-		}
+		}		
 		return version;
 	}
 	
@@ -218,7 +218,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		System.out.println("bonsoir : " + obj_cour);
 		if (obj_cour != null){ /* Si on a un retour, c'est que l'objet est plus récent, donc on doit mettre à jour */
 			Client.mapSO.put(id, obj_cour);
-			Client.rappel_ecr.maj(id, obj_cour.obj,obj_cour.getVersion());
+			Client.rappel_ecr.maj(id, obj_cour.obj,obj_cour.getVersion()); /* A commenter pour le registre régulier */
 		}
 		return obj_cour;
 	}

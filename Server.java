@@ -18,7 +18,7 @@ import java.util.*;
 
 public class Server extends UnicastRemoteObject implements Server_itf {
 
-    public static int NB_CLIENTS = 12;
+    public static int NB_CLIENTS = 20;
     private Set<Client_itf> tabC = new HashSet<Client_itf>(); 
     private int cmptclient = 0;
 
@@ -30,17 +30,6 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         this.mapSO = new HashMap<Integer, ServerObject>();
         this.mapName = new HashMap<String, Integer>();
 	}
-
-    @Override 
-    public int lookup(String name) throws RemoteException {
-        Integer res = 0;
-       /*    Integer res = this.mapName.get(name);
-        if (res == null){
-            return -1;
-        }*/
-        return res;
-    }
-
 
     @Override
     public void addClient(Client_itf client) throws RemoteException {
@@ -89,11 +78,6 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         int version = so.newVersion();
         so.obj = obj;
         this.mapSO.put(idObjet, so);
-        System.out.println("Nouvelle version : " + version);
-		//SharedObject so = new SharedObject(obj, idObjet); /* Création du nouvel objet modifié */
-		//so.setVersion(version);
-		//Client.mapSO.put(idObjet, so);
-        System.out.println("Objet Server : " + so.obj);
 		for(Client_itf c : this.tabC){ /* On propage la mise à jour aux autres clients de façon asynchrone */
 			Client_maj_Slave s = new Client_maj_Slave(c, so.obj, idObjet, version);
 			s.start();	
@@ -111,7 +95,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     }
 
     public static void main(String [] args){
-        System.out.println("Hello world !");
+        System.out.println("== Server launch ==");
 
         if (args != null && args.length == 1){              /* On peut changer le nombre de clients en paramètres */
             Server.NB_CLIENTS = Integer.parseInt(args[0]);

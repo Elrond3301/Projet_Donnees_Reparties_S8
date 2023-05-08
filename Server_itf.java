@@ -10,13 +10,6 @@
 import java.util.Set;
 
 public interface Server_itf extends java.rmi.Remote {
-	/*
-	 * Fonction Lookup
-	 * Parametres : name : nom de l'objet
-	 * Retour : int : identifiant de l'objet
-	 * Cette fonction permet de rechercher un objet dans le serveur
-	 */
-	public int lookup(String name) throws java.rmi.RemoteException;
 
 	/*
 	 * Fonction addClient
@@ -25,6 +18,10 @@ public interface Server_itf extends java.rmi.Remote {
 	 */
 	public void addClient(Client_itf client) throws java.rmi.RemoteException;
 
+	/*
+	 * Fonction getClients
+	 * Retour : Set<Client_itf> : ensemble des clients connectés
+	 */
 	public Set<Client_itf> getClients() throws java.rmi.RemoteException;
 
 	/*
@@ -45,7 +42,6 @@ public interface Server_itf extends java.rmi.Remote {
 	 * Cette fonction permet d'écrire une nouvelle valeur dans un objet
 	 */
 	public int write(int idObjet, Object obj) throws java.rmi.RemoteException;
-
 
 	/*
 	 * Fonction getCmptclient

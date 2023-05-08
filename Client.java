@@ -24,10 +24,11 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	private static Client_itf me; // L'objet client
 	private static HashMap<Integer, SharedObject> mapSO =  new HashMap<Integer, SharedObject>(); // Map qui associe un SharedObject à son id
 	private static Set<Client_itf> tabC = new HashSet<Client_itf>(); //liste des clients_itf utile dans le addClient
+	private int nb_client_last = Server.NB_CLIENTS; // nombre de client actifs lors de la dernière mise à jour
+	private int demande = 0; // numéro de la demande en cours
+	private Rappel_lec rappel_lec; 
+	private Rappel_ecr rappel_ecr;
 
-	private static Rappel_lec rappel_lec; 
-	private static Rappel_ecr rappel_ecr;
-	
 	public Client() throws RemoteException {
 		super(); // On appelle le constructeur de UnicastRemoteObject
 	}
@@ -71,27 +72,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		}
 	
 		
-	}
-
-	/*
-	 * Fonction statique de recherche d'un SharedObject dans le serveur
-	 * Parametres : name : nom du SharedObject
-	 * Retour : SharedObject : SharedObject trouvé, null sinon
-	 */
-	public static SharedObject lookup(String name) {
-		SharedObject so = null;
-		try {
-			// On récupère l'id du SharedObject
-			int id = server.lookup(name);
-			if (id != -1){ // Si l'id est différent de -1, on a trouvé le SharedObject
-				so = new SharedObject(id); // On crée un SharedObject avec l'id récupéré
-				Client.mapSO.put(id, so); // On ajoute le SharedObject à la map
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return so;
-	}		
+	}	
 
 	/*
 	 * Fonction statique d'enregistrement et du publication d'un SharedObject dans le serveur
@@ -107,8 +88,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 			so = new SharedObject(o,id); // On crée un SharedObject avec l'id récupéré
 			mapSO.put(id, so);
 		} catch (RemoteException e) {
-			 // On regarde si le SharedObject existe déjà
-			 
+			// On regarde si le SharedObject existe déjà
 		}
 		return so;
 	}
@@ -120,11 +100,10 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	 * Retour : l'objet partagé le plus récent ou null si erreur
 	 * Fait une enquête auprès des autres clients pour récupérer la version de l'objet la plus récente
 	 */
-	public static SharedObject read(int id, Rappel_lec rappel){
+	public static SharedObject read(int id){
 		try {
-			return Client.me.enquete(id, rappel);
+			return Client.me.enquete(id);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -165,59 +144,56 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		return mapSO.get(id).getVersion();
 	}
 
-	public synchronized void addReponse(Object o, Client_itf c, int version){
-		Client.rappel_lec.reponse(o, version);
-		Client.rappel_ecr.reponse(c);
-		System.out.println("Client add réponse" + Client.rappel_lec.length() + " Besoin de " + Server.NB_CLIENTS/2 + " clients");
-		if (Client.rappel_lec.length() >= Server.NB_CLIENTS/2){
-			System.out.println("je me réveille");
-			Client.me.notify();
+	public synchronized void addReponse(Object o, Client_itf c, int id, int new_version, int old_demande){
+		if (old_demande == this.demande){
+			this.rappel_lec.reponse(o, new_version);
+			this.rappel_ecr.reponse(c);
+			/* On regarde si le nombre de réponses obtenues est supérieure à la majorité des clients présents TOUJOURS actifs ou au moins une réponse  */
+			if (this.rappel_lec.length() >= Math.max(Math.min(Server.NB_CLIENTS/2, this.nb_client_last/2), 1)){
+				Client.me.notify();
+			}
 		}
 	}
 
-	public synchronized SharedObject enquete(int id, Rappel_lec rappel){
-		Client.rappel_lec = rappel;
-		Client.rappel_ecr = new Rappel_ecr();
-		System.out.println("debut enquete");
-		for (Client_itf c : Client.tabC){ /* Labce un slave d'enquête pour chaque client */
-			System.out.println("lancement client ");
-			Client_enquete_Slave s = new Client_enquete_Slave(c, id, me);
+	public synchronized SharedObject enquete(int id){
+		this.demande++; // On incrémente le numéro de demande pour cette enquête
+		if (this.rappel_lec != null){ /* On vérifie qu'il ne s'agit pas de la première enquête */
+			this.nb_client_last = this.rappel_lec.length(); 
+		}
+		this.rappel_lec = new Rappel_lec();
+		this.rappel_ecr = new Rappel_ecr();
+
+		for (Client_itf c : Client.tabC){ /* Lance un slave d'enquête pour chaque client */
+			Client_enquete_Slave s = new Client_enquete_Slave(c, id, me, demande);
 			s.start();
 		}
 		try {
-			System.out.println("attente");
 			Client.this.wait(); 	/* Attend qu'au moins la moitié des clients aient répondus */
 		} catch (InterruptedException e) {
 			e.printStackTrace();    /* Sinon on a un problème */
 		}
-		System.out.println("réveil");	
 
 		SharedObject obj_cour = null;
-		int length = Client.rappel_lec.length();
+		int length = this.rappel_lec.length();
 		int ver_min = 0;
-		System.out.println("test taille : " + Client.rappel_lec.length());
 		for (int i = 0; i < length; i++){
-			System.out.println("test :" + i);
-			SharedObject s = new SharedObject(Client.rappel_lec.getObj(i), id);
-			s.setVersion(Client.rappel_lec.getVersion(i));
-			System.out.println("comparaison : " + ver_min + ", " + s.getVersion() + " ->" + s.obj);
+			SharedObject s = new SharedObject(this.rappel_lec.getObj(i), id);
+			s.setVersion(this.rappel_lec.getVersion(i));
 			int ver_test = s.getVersion();
 			if (ver_test >= ver_min){  /* On vérifie que la version actuelle est la plus récente, on la modifie sinon */
 				ver_min = ver_test;
 				obj_cour = s;
 			}
 		}
-		System.out.println("bonsoir : " + obj_cour);
 		if (obj_cour != null){ /* Si on a un retour, c'est que l'objet est plus récent, donc on doit mettre à jour */
 			Client.mapSO.put(id, obj_cour);
-			Client.rappel_ecr.maj(id, obj_cour.obj,obj_cour.getVersion()); /* A commenter pour le registre régulier */
+			this.rappel_ecr.maj(id, obj_cour.obj,obj_cour.getVersion()); /* A commenter pour le registre régulier */
 		}
 		return obj_cour;
 	}
 
-	
 	public void majAsynchrone(Object o, int id, int version) throws RemoteException {
-		if (Client.mapSO.get(id).getVersion() < version){ /* Si on a une version plus vieille que la version actuelle */
+		if (Client.mapSO.get(id) == null || Client.mapSO.get(id).getVersion() < version){ /* Si on a une version plus vieille que la version actuelle */
 			SharedObject so = new SharedObject(o, id);
 			so.setVersion(version);		/* On met à jour la version et l'objet */
 			Client.mapSO.put(id, so);

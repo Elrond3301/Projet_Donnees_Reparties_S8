@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 /* 
  * Client Normal
@@ -11,7 +12,7 @@ import java.io.IOException;
 */
 public class ClientNormal {
 
-    final static int NB_ITERATIONS = 5;
+    final static int NB_ITERATIONS = 50;
 
     private String myName;
     private SharedObject sentence;
@@ -34,10 +35,16 @@ public class ClientNormal {
 	public void run() {
         try {
             for(int i = 0; i < ClientNormal.NB_ITERATIONS; i++) {
-                
-                if (i%2==0){
+                Random rand = new Random();
+                int n = rand.nextInt(1000);
 
-//                    System.out.println("Client " + this.myName + " veut écrire");
+                if (n < 10){ // Probabilité d'être tué sur 1000
+                    FileWriter fw = new FileWriter("test.txt", true);
+                    fw.write(myName+" meurt\n");
+                    fw.close();
+                    System.exit(0);
+                }
+                else if (i%2==0){
                     FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" avant écriture " +((SharedObject) this.sentence).getVersion() + "\n");
                     fw.close();
@@ -47,7 +54,6 @@ public class ClientNormal {
                     fw.close();
             
                 } else {
-//                    System.out.println("Client " + this.myName + " veut lire");
                     FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" avant read " + ((SharedObject) this.sentence).getVersion()+"\n");
                     fw.close();
@@ -56,10 +62,16 @@ public class ClientNormal {
                     fw.write(myName+" après read " + ((SharedObject) this.sentence).getVersion()+ "\n");
                     fw.close();
                 }
+
             }
-        } catch (IOException e) {
-                e.printStackTrace();
+            FileWriter fw = new FileWriter("test.txt", true);
+            fw.write(myName+" a fini\n");
+            fw.close();
+        } catch (Exception e) {
+            //e.printStackTrace();
         }
+        
+        
 	}
 
     public static void main(String[] args) {

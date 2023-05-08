@@ -37,11 +37,13 @@ public interface Client_itf extends java.rmi.Remote {
 	 * Fonction addReponse
 	 * Parametres : o : objet 
 	 * 				c : client qui ajoute la réponse
-	 * 				version : version que possède le client
+	 * 				id : identifiant
+	 * 				new_version : version que possède le client
+	 * 				old_demande : version que possède le client qui a lancé l'enquête
 	 * Ajoute une réponse pour le rappel en écriture et en lecture
 	 * Si plus de la moitié des réponses sont reçus, il se débloque
 	 */
-	public void addReponse(Object o, Client_itf c, int version) throws RemoteException ;
+	public void addReponse(Object o, Client_itf c, int id, int new_version, int old_demande) throws RemoteException ;
 	
 	/*
 	 * Fonction enquete 
@@ -50,7 +52,7 @@ public interface Client_itf extends java.rmi.Remote {
 	 * Retour: le sharedobject le plus récent
 	 * Demande une enquête auprès de tous les clients pour obtenir le SO le plus récent et le mettre à jour si nécessaire
 	 */
-	public SharedObject enquete(int id, Rappel_lec rappel) throws RemoteException;
+	public SharedObject enquete(int id) throws RemoteException;
 
 	/*
 	 * Fonction majAsynchrone

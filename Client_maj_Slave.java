@@ -27,7 +27,6 @@ public class Client_maj_Slave extends Thread {
 		try {
 			c.majAsynchrone(this.o, this.id, this.version);
 		} catch (RemoteException e) {
-			e.printStackTrace();
 		}
 	}
 

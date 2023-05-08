@@ -61,8 +61,7 @@ public class SharedObject implements SharedObject_itf {
 	 * Retourne l'objet
 	 */
 	public Object read(){
-		System.out.println("je lis");
-		SharedObject s = Client.read(this.id, new Rappel_lec());
+		SharedObject s = Client.read(this.id);
 		if (s.obj != null){
 			this.version = s.getVersion();
 			return s.obj;
@@ -77,7 +76,6 @@ public class SharedObject implements SharedObject_itf {
 	 * Cette fonction permet d'écrire dans l'objet
 	 */
 	public void write(Object o){
-		System.out.println("j'ecris");
 		this.version = Client.mise_a_jour(o, this.id);
 	}
 }

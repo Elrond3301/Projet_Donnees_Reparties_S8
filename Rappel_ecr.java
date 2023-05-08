@@ -50,8 +50,7 @@ public class Rappel_ecr implements Remote {
                     Client_maj_Slave sc = new Client_maj_Slave(c, o, id, version);
                     sc.start();
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
             }
         }
     }

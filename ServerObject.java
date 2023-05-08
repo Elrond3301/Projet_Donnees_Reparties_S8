@@ -1,5 +1,4 @@
-import java.util.*;
-import java.rmi.*;
+
 
 /* 
  * Classe ServerObject
@@ -12,19 +11,15 @@ import java.rmi.*;
 
 public class ServerObject implements ServerObject_itf{
 
-    private int id; 
     private String name;
-    private List <Client_itf> sites; //List of clients that have a lock on the object
     public Object obj;
     private int version;
 
 
 
-    public ServerObject(int id, Object obj,int version){
+    public ServerObject(int id, Object obj, int version){
         super();
         this.obj =  obj;
-        this.id = id;
-        this.sites = new ArrayList<Client_itf>(); //List -> for (elem : list) if elem.id == id then lock...
         this.version = version;
     }
 

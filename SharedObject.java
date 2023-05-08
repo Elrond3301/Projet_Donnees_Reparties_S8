@@ -36,7 +36,7 @@ public class SharedObject implements SharedObject_itf {
 		return this.id;
 	}
 
-	/*
+	/*	
 	 * Fonction Get Version
 	 * Cette fonction permet de récupérer la version d'un objet
 	 * Retourne le numero de version  de l'objet

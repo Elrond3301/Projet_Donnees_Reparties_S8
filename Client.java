@@ -56,9 +56,9 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 					throw new RuntimeErrorException(null);
 				}
 				me = new Client();
-				tabC =  server.addClient(me); // ajout du client
+				server.addClient(me); // ajout du client
 				while ( server.getCmptclient() != Server.NB_CLIENTS){/* Attente*/}
-				
+				tabC =  server.getClients();
 			} catch (AccessException e) {
 				e.printStackTrace();
 			} catch (NotBoundException e) {

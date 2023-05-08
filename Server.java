@@ -43,15 +43,17 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 
 
     @Override
-    public Set<Client_itf> addClient(Client_itf client) throws RemoteException {
+    public void addClient(Client_itf client) throws RemoteException {
         // faire un slave qui ajoute et attend jusqu'à this.cmptclient == NB_CLIENT
         if (this.cmptclient < Server.NB_CLIENTS){
             this.tabC.add(client);
             this.cmptclient++;
         } 
-        return this.tabC;
     }
 
+    public Set<Client_itf> getClients() throws RemoteException {
+        return this.tabC;
+    }
 
     @Override
     public int publish(String name, Object o, boolean reset) throws RemoteException {

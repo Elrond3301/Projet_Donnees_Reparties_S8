@@ -7,6 +7,8 @@
  * Cette interface définit les fonctions que le client peut appeler sur le serveur
 */
 
+import java.util.Set;
+
 public interface Server_itf extends java.rmi.Remote {
 	/*
 	 * Fonction Lookup
@@ -19,10 +21,11 @@ public interface Server_itf extends java.rmi.Remote {
 	/*
 	 * Fonction addClient
 	 * Parametres : client : client à ajouter
-	 * Retour : Set<Client_itf> : liste des clients connectés
 	 * Cette fonction permet d'ajouter un client au serveur
 	 */
-	public java.util.Set<Client_itf> addClient(Client_itf client) throws java.rmi.RemoteException;
+	public void addClient(Client_itf client) throws java.rmi.RemoteException;
+
+	public Set<Client_itf> getClients() throws java.rmi.RemoteException;
 
 	/*
 	 * Fonction publish

@@ -78,7 +78,6 @@ public class SharedObject implements SharedObject_itf {
 	 */
 	public void write(Object o){
 		System.out.println("j'ecris");
-		//this.obj = o;
-		this.version = Client.mise_a_jour(this.obj, this.id);
+		this.version = Client.mise_a_jour(o, this.id);
 	}
 }

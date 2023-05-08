@@ -18,7 +18,7 @@ import java.util.*;
 
 public class Server extends UnicastRemoteObject implements Server_itf {
 
-    public static int NB_CLIENTS = 25;
+    public static int NB_CLIENTS = 12;
     private Set<Client_itf> tabC = new HashSet<Client_itf>(); 
     private int cmptclient = 0;
 
@@ -93,6 +93,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 		//SharedObject so = new SharedObject(obj, idObjet); /* Création du nouvel objet modifié */
 		//so.setVersion(version);
 		//Client.mapSO.put(idObjet, so);
+        System.out.println("Objet Server : " + so.obj);
 		for(Client_itf c : this.tabC){ /* On propage la mise à jour aux autres clients de façon asynchrone */
 			Client_maj_Slave s = new Client_maj_Slave(c, so.obj, idObjet, version);
 			s.start();	

@@ -33,26 +33,31 @@ public class ClientLazy{
 	public void run() {
         try {
             for(int i = 0; i < ClientNormal.NB_ITERATIONS; i++) {
-                FileWriter fw = new FileWriter("test.txt", true);
                 if (i%2==0){
 
-                    System.out.println("Client " + this.myName + " veut écrire");
-                    fw.write(myName+" avant écriture iteration " + i + " " + ((SharedObject) this.sentence).getVersion() + "\n");
-                    this.sentence.write("ecriture : " + i);
-                    fw.write(myName+" après écriture " + ((SharedObject) this.sentence).getVersion()+"\n");
+//                    System.out.println("Client " + this.myName + " veut écrire");
+                    FileWriter fw = new FileWriter("test.txt", true);
+                    fw.write(myName+" avant écriture " + ((SharedObject) this.sentence).getVersion() + "\n");
+                    fw.close();
+                    this.sentence.write("ecriture : " + i);                    
                     // Attente de 5 secondes
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e1) {
                         e1.printStackTrace();
                     }
+                    fw = new FileWriter("test.txt", true);
+                    fw.write(myName+" après écriture " + ((SharedObject) this.sentence).getVersion()+ "\n");
+                    fw.close();
 
 
             
                 } else {
-                    System.out.println("Client " + this.myName + " veut lire");
-                    fw.write(myName+" avant read iteration " + i + " " + ((SharedObject) this.sentence).getVersion()+"\n");
-                    fw.write(myName+" après read " + ((SharedObject) this.sentence).getVersion()+"\n");
+//                    System.out.println("Client " + this.myName + " veut lire");
+                    FileWriter fw = new FileWriter("test.txt", true);
+                    fw.write(myName+" avant read " + ((SharedObject) this.sentence).getVersion()+"\n");
+                    fw.close();
+                    this.sentence.read();
 
                     // Attente de 5 secondes
                     try {
@@ -61,13 +66,16 @@ public class ClientLazy{
                         e1.printStackTrace();
                     }
 
+                    fw = new FileWriter("test.txt", true);
+                    fw.write(myName+" après read " + ((SharedObject) this.sentence).getVersion() +"\n");
+                    fw.close();
+
                 }
-                fw.close();
             }
         } catch (IOException e) {
                 e.printStackTrace();
         }
-	}
+    }
 
     public static void main(String[] args) {
         ClientLazy c = new ClientLazy(args[0]);

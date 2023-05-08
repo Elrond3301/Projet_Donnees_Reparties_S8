@@ -51,7 +51,6 @@ public class Rappel_ecr implements Remote {
                     sc.start();
                 }
             } catch (RemoteException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

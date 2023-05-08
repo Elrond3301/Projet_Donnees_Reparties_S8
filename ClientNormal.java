@@ -37,22 +37,23 @@ public class ClientNormal {
                 
                 if (i%2==0){
 
-                    System.out.println("Client " + this.myName + " veut écrire");
+//                    System.out.println("Client " + this.myName + " veut écrire");
                     FileWriter fw = new FileWriter("test.txt", true);
-                    fw.write(myName+" avant écriture iteration " + i + " " +((SharedObject) this.sentence).getVersion() + "\n");
+                    fw.write(myName+" avant écriture " +((SharedObject) this.sentence).getVersion() + "\n");
                     fw.close();
                     this.sentence.write("ecriture : " + i);
                     fw = new FileWriter("test.txt", true);
-                    fw.write(myName+" après écriture " + ((SharedObject) this.sentence).getVersion()+"\n");
+                    fw.write(myName+" après écriture " + ((SharedObject) this.sentence).getVersion()+ "\n");
                     fw.close();
             
                 } else {
-                    System.out.println("Client " + this.myName + " veut lire");
+//                    System.out.println("Client " + this.myName + " veut lire");
                     FileWriter fw = new FileWriter("test.txt", true);
-                    fw.write(myName+" avant read iteration " + i + " " + ((SharedObject) this.sentence).getVersion()+"\n");
+                    fw.write(myName+" avant read " + ((SharedObject) this.sentence).getVersion()+"\n");
                     fw.close();
+                    this.sentence.read();
                     fw = new FileWriter("test.txt", true);
-                    fw.write(myName+" après read " + ((SharedObject) this.sentence).getVersion()+"\n");
+                    fw.write(myName+" après read " + ((SharedObject) this.sentence).getVersion()+ "\n");
                     fw.close();
                 }
             }

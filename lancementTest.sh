@@ -1,7 +1,7 @@
 #!/bin/sh
 
-nbclientsNormaux=10
-nbclientsLazy=2
+nbclientsNormaux=20
+nbclientsLazy=5
 
 
 echo "" > test.txt

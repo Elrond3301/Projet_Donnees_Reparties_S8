@@ -140,18 +140,10 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	public static int mise_a_jour(Object obj, int idObjet){
 		int version = 0;
 		try {
-			version = server.write(idObjet); /* On demande au serveur d'écrire dans l'objet et de nous donner le bon numéro de version */
+			version = server.write(idObjet,obj); /* On demande au serveur d'écrire dans l'objet et de nous donner le bon numéro de version */
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Nouvelle version : " + version);
-		SharedObject so = new SharedObject(obj, idObjet); /* Création du nouvel objet modifié */
-		so.setVersion(version);
-		Client.mapSO.put(idObjet, so);
-		for(Client_itf c : Client.tabC){ /* On propage la mise à jour aux autres clients de façon asynchrone */
-			Client_maj_Slave s = new Client_maj_Slave(c, so.obj, idObjet, so.getVersion());
-			s.start();	
-		}		
 		return version;
 	}
 	

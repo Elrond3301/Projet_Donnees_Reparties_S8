@@ -84,11 +84,20 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     }
 
     @Override
-    public int write(int idObjet) throws RemoteException {
+    public synchronized int write(int idObjet, Object obj) throws RemoteException { /* synchronized pour Atomique */
         ServerObject so =  this.mapSO.get(idObjet);
-        int res = so.newVersion();
+        int version = so.newVersion();
+        so.obj = obj;
         this.mapSO.put(idObjet, so);
-        return res;
+        System.out.println("Nouvelle version : " + version);
+		//SharedObject so = new SharedObject(obj, idObjet); /* Création du nouvel objet modifié */
+		//so.setVersion(version);
+		//Client.mapSO.put(idObjet, so);
+		for(Client_itf c : this.tabC){ /* On propage la mise à jour aux autres clients de façon asynchrone */
+			Client_maj_Slave s = new Client_maj_Slave(c, so.obj, idObjet, version);
+			s.start();	
+		}		
+        return version;
     }
 
     // return the name of the ServerObject associated to the id

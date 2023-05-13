@@ -185,15 +185,30 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 				obj_cour = s;
 			}
 		}
+		//Comparaison avec propre version : ordonancement à commenter pour le registre régulier
+		SharedObject so =  Client.mapSO.get(id);
+		int sauv = -1;
+		if (so != null && obj_cour != null){
+			sauv = obj_cour.getVersion();
+			System.out.println("TEST Enquete : my_version : " + so.getVersion() + ", test_version : " + obj_cour.getVersion());
+		}
+		if (so != null && obj_cour != null && so.getVersion() > obj_cour.getVersion()){
+			obj_cour = so;
+		}
+
 		if (obj_cour != null){ /* Si on a un retour, c'est que l'objet est plus récent, donc on doit mettre à jour */
 			Client.mapSO.put(id, obj_cour);
 			this.rappel_ecr.maj(id, obj_cour.obj,obj_cour.getVersion()); /* A commenter pour le registre régulier */
+		} else {
+			obj_cour = so;
 		}
+		System.out.println("Test Enquete : version finale : " + obj_cour.getVersion() + ", version sauv : " + sauv + ", my_version : " + so.getVersion());
 		return obj_cour;
 	}
 
 	public void majAsynchrone(Object o, int id, int version) throws RemoteException {
-		if (Client.mapSO.get(id) == null || Client.mapSO.get(id).getVersion() < version){ /* Si on a une version plus vieille que la version actuelle */
+		System.out.println("TEST MAJasynchrone : my_version" + Client.mapSO.get(id).getVersion() + ", their version : " + version);
+		if (Client.mapSO.get(id) == null || Client.mapSO.get(id).getVersion() < version){ /* Si on a une version plus vieille que la version actuelle à commenter pour le registre régulier */
 			SharedObject so = new SharedObject(o, id);
 			so.setVersion(version);		/* On met à jour la version et l'objet */
 			Client.mapSO.put(id, so);

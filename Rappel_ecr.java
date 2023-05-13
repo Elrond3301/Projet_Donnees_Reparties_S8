@@ -46,9 +46,9 @@ public class Rappel_ecr implements Remote {
         for (Client_itf c : this.tabc){
             try {
                 if (c.getVersion(id) < version){
-                    Client_maj_Slave sc = new Client_maj_Slave(c, o, id, version);
-                    sc.start();
-                }
+    	        	Client_maj_Slave s = new Client_maj_Slave(c, o, id, version);
+	    		    s.start();	
+	            }
             } catch (Exception e) {
             }
         }

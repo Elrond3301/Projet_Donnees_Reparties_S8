@@ -64,6 +64,7 @@ public class SharedObject implements SharedObject_itf {
 		SharedObject s = Client.read(this.id);
 		if (s.obj != null){
 			this.version = s.getVersion();
+			this.obj = s.obj;
 			return s.obj;
 		} else {
 			return this.obj;

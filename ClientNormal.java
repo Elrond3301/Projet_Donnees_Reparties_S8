@@ -37,13 +37,14 @@ public class ClientNormal {
                 Random rand = new Random();
                 int n = rand.nextInt(1000);
 
-                if (n < 10){ // Probabilité d'être tué sur 1000
+          /*      if (n < 10){ // Probabilité d'être tué sur 1000
                     FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" meurt\n");
                     fw.close();
                     System.exit(0);
-                }
-                else if (i%2==0){
+                }*/
+                /*else*/ if (i%2==0){
+                //if (myName.equals("ClientNormal1")){
                     FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" avant écriture " +((SharedObject) this.sentence).getVersion() + "\n");
                     fw.close();

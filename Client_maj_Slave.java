@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 * Auteur : CAMPAN Mathieu
 *          HAUTESSERRES Simon
 *          BESSON Germain
-* Date : 03/05/2023
+* Date : 14/05/2023
 * Cette classe permet d'effectuer une mise à jour asynchrone pour un client cible
 */
 public class Client_maj_Slave extends Thread {

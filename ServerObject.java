@@ -5,7 +5,7 @@
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
  *          BESSON Germain
- * Date : 03/05/2023
+ * Date : 14/05/2023
  * La classe ServerObject contient un objet partagé et un id
  */
 

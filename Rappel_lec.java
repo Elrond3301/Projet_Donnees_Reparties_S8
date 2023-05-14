@@ -6,7 +6,7 @@ import java.util.*;
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
  *          BESSON Germain
- * Date : 03/05/2023
+ * Date : 14/05/2023
  * La classe rappel_lecture permet de mettre à jour en écriture chaque client
 */
 

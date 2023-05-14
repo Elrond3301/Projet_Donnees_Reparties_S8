@@ -6,7 +6,7 @@ import java.util.Random;
  * Auteur : BESSON Germain
  *          CAMPAN Mathieu
  *          HAUTESSERRES Simon
- * Date : 03/05/2023
+ * Date : 14/05/2023
  * La classe ClientLazy permet de créer un client qui va écrire et lire dans un fichier en alternance
  * en attendant 5 secondes entre chaque écriture/lecture
 */
@@ -36,13 +36,14 @@ public class ClientLazy{
                 Random rand = new Random();
                 int n = rand.nextInt(1000);
 
-                if (n < 10){ // Probabilité d'être tué sur 1000
+                if (n < 100){ // Probabilité d'être tué sur 1000
                     FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" meurt\n");
                     fw.close();
                     System.exit(0);
                 }
-                else if (i%2==0){
+                if (i%2==0){
+                // if (false){      à décommenter pour registre régulier                    
                     FileWriter fw = new FileWriter("test.txt", true);
                     fw.write(myName+" avant écriture " + ((SharedObject) this.sentence).getVersion() + "\n");
                     fw.close();

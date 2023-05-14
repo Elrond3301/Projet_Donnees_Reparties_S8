@@ -3,7 +3,7 @@
  * Auteur : CAMPAN Mathieu
  *          HAUTESSERRES Simon
  *          BESSON Germain
- * Date : 25/03/2023
+ * Date : 14/05/2023
  * Cette interface définit les fonctions que le client peut appeler sur le serveur
 */
 

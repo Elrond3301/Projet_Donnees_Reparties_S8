@@ -74,6 +74,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		
 	}	
 
+
 	/*
 	 * Fonction statique d'enregistrement et du publication d'un SharedObject dans le serveur
 	 * Parametres : name : nom du SharedObject
@@ -120,6 +121,9 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		int version = 0;
 		try {
 			version = server.write(idObjet,obj); /* On demande au serveur d'écrire dans l'objet et de nous donner le bon numéro de version */
+			SharedObject so = new SharedObject(obj, idObjet);
+			so.setVersion(version);
+			Client.mapSO.put(idObjet, so);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -187,11 +191,6 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		}
 		//Comparaison avec propre version : ordonancement à commenter pour le registre régulier
 		SharedObject so =  Client.mapSO.get(id);
-		int sauv = -1;
-		if (so != null && obj_cour != null){
-			sauv = obj_cour.getVersion();
-			System.out.println("TEST Enquete : my_version : " + so.getVersion() + ", test_version : " + obj_cour.getVersion());
-		}
 		if (so != null && obj_cour != null && so.getVersion() > obj_cour.getVersion()){
 			obj_cour = so;
 		}
@@ -202,12 +201,10 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 		} else {
 			obj_cour = so;
 		}
-		System.out.println("Test Enquete : version finale : " + obj_cour.getVersion() + ", version sauv : " + sauv + ", my_version : " + so.getVersion());
 		return obj_cour;
 	}
 
 	public void majAsynchrone(Object o, int id, int version) throws RemoteException {
-		System.out.println("TEST MAJasynchrone : my_version" + Client.mapSO.get(id).getVersion() + ", their version : " + version);
 		if (Client.mapSO.get(id) == null || Client.mapSO.get(id).getVersion() < version){ /* Si on a une version plus vieille que la version actuelle à commenter pour le registre régulier */
 			SharedObject so = new SharedObject(o, id);
 			so.setVersion(version);		/* On met à jour la version et l'objet */

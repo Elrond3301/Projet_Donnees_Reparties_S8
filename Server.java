@@ -18,7 +18,7 @@ import java.util.*;
 
 public class Server extends UnicastRemoteObject implements Server_itf {
 
-    public static int NB_CLIENTS = 3;
+    public static int NB_CLIENTS = 10;
     private Set<Client_itf> tabC = new HashSet<Client_itf>(); 
     private int cmptclient = 0;
 

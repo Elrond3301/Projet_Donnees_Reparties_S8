@@ -2,7 +2,7 @@
 
 #### PENSEZ A CHANGER LE NOMBRE DES CLIENTS TOTAUX DANS Server.java ET LANCER LE SERVEUR ####
 
-nbclientsNormaux=20
+nbclientsNormaux=10
 nbclientsLazy=0
 
 echo "!== Server.java doit être lancé avant de lancer ce script ==!"
